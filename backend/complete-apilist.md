@@ -189,17 +189,17 @@ GET http://localhost:3000/api/exam-sub-info?parentInfo=EXAM_INFO_ID&isActive=tru
 | Exam Sub Info   | `/api/exam-sub-info`  | GET, POST, PUT, DELETE | Manage exam sub information | ✅ Active |
 | Users           | `/api/users`          | GET, POST, PUT, DELETE | Manage users (admin)        | ✅ Active |
 
-## Data Seeding Status
+## Database Status
 
-| Collection      | Records Created | API Status | Admin Panel  |
-| --------------- | --------------- | ---------- | ------------ |
-| Exam Categories | 5               | ✅ Working | ✅ Available |
-| Exams           | 10              | ✅ Working | ✅ Available |
-| Leads           | 5               | ✅ Working | ✅ Available |
-| Posts           | 3               | ✅ Working | ✅ Available |
-| Download Menus  | 5               | ✅ Working | ✅ Available |
-| Sub Folders     | 3               | ✅ Working | ✅ Available |
-| Exam Info       | 3               | ✅ Working | ✅ Available |
-| Exam Sub Info   | 4               | ✅ Working | ✅ Available |
-| Media           | 0               | ✅ Working | ✅ Available |
-| Users           | 0               | ✅ Working | ✅ Available |
+| Collection      | API Status | Admin Panel  | Description   |
+| --------------- | ---------- | ------------ | ------------- |
+| Exam Categories | ✅ Working | ✅ Available | Ready for use |
+| Exams           | ✅ Working | ✅ Available | Ready for use |
+| Leads           | ✅ Working | ✅ Available | Ready for use |
+| Posts           | ✅ Working | ✅ Available | Ready for use |
+| Download Menus  | ✅ Working | ✅ Available | Ready for use |
+| Sub Folders     | ✅ Working | ✅ Available | Ready for use |
+| Exam Info       | ✅ Working | ✅ Available | Ready for use |
+| Exam Sub Info   | ✅ Working | ✅ Available | Ready for use |
+| Media           | ✅ Working | ✅ Available | Ready for use |
+| Users           | ✅ Working | ✅ Available | Ready for use |

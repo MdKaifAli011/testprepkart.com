@@ -35,7 +35,7 @@ export default buildConfig({
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: mongooseAdapter({
-    url: process.env.DATABASE_URI || 'mongodb+srv://hellomdkaifali_db_user:ht0t1iEmhCkorBqf@backend.zzjdjsk.mongodb.net/?retryWrites=true&w=majority&appName=Backend',
+    url: process.env.DATABASE_URI || 'mongodb+srv://hellomdkaifali_db_user:hellomdkaifali_db_use@cluster0.vywipih.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
   }),
   sharp,
   plugins: [
