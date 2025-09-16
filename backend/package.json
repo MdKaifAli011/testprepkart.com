@@ -16,7 +16,8 @@
     "test": "pnpm run test:int && pnpm run test:e2e",
     "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --no-experimental-strip-types\" pnpm exec playwright test",
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
-    "seed": "node seed-via-api.js"
+    "seed": "node comprehensive-seed.js",
+    "verify": "node verify-apis.js"
   },
   "dependencies": {
     "@payloadcms/db-mongodb": "3.55.1",

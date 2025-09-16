@@ -1,12 +1,12 @@
 import { CollectionConfig } from 'payload'
 
-export const SubFolder: CollectionConfig = {
-  slug: 'sub-folders',
+export const ExamInfo: CollectionConfig = {
+  slug: 'exam-info',
   admin: {
-    useAsTitle: 'name',
-    defaultColumns: ['name', 'mainFolder', 'order', 'createdAt'],
-    group: 'DownloadMenus',
-    description: 'Organize content within download menus using sub folders',
+    useAsTitle: 'title',
+    defaultColumns: ['title', 'exam', 'createdAt'],
+    description: 'Manage exam information and study materials',
+    group: 'ExamInfo',
   },
   access: {
     read: () => true,
@@ -16,30 +16,40 @@ export const SubFolder: CollectionConfig = {
   },
   fields: [
     {
-      name: 'name',
+      name: 'title',
       type: 'text',
       required: true,
-      label: 'Sub Folder Name',
+      label: 'Exam Info Name',
       admin: {
-        description: 'e.g., Physics Sample Paper, Chemistry Sample Papers',
+        description: 'e.g., JEE Main Study Guide, NEET Preparation Materials, SAT Practice Tests',
+        placeholder: 'Enter exam information name',
       },
     },
-   
     {
-      name: 'order',
-      type: 'number',
-      label: 'Sort Order',
+      name: 'exam',
+      type: 'relationship',
+      relationTo: 'exam',
+      required: true,
+      label: 'Exam',
       admin: {
-        description: 'Display order within the parent menu (lower numbers appear first)',
-        placeholder: '0',
+        description: 'Select the exam this information is for',
       },
     },
   
- 
+   
+    {
+      name: 'sortOrder',
+      type: 'number',
+      label: 'Sort Order',
+      admin: {
+        description: 'Order in which this information appears (lower numbers first)',
+        placeholder: '0',
+      },
+    },
     {
       name: 'files',
       type: 'array',
-      label: 'Download Items',
+      label: 'Exam Info Files',
       admin: {
         description: 'Add multiple files for this sub folder',
       },
@@ -81,15 +91,7 @@ export const SubFolder: CollectionConfig = {
             description: 'Select the type of file',
           },
         },
-        {
-          name: 'locked',
-          type: 'checkbox',
-          defaultValue: true,
-          label: 'Locked (Requires Contact Form)',
-          admin: {
-            description: 'Whether this file requires contact form submission to download',
-          },
-        },
+     
         {
           name: 'order',
           type: 'number',
@@ -101,6 +103,8 @@ export const SubFolder: CollectionConfig = {
         },
       ],
     },
+   
+   
   ],
   timestamps: true,
 }

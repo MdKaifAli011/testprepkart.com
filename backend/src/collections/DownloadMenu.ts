@@ -42,24 +42,7 @@ export const DownloadMenu: CollectionConfig = {
         description: 'Select the exam type this menu is for',
       },
     },
-    {
-      name: 'description',
-      type: 'textarea',
-      label: 'Description',
-      admin: {
-        description: 'Optional description for this download menu',
-        placeholder: 'Enter a description for this menu',
-      },
-    },
-    {
-      name: 'isActive',
-      type: 'checkbox',
-      label: 'Active',
-      defaultValue: true,
-      admin: {
-        description: 'Whether this menu is currently active and visible',
-      },
-    },
+ 
     {
       name: 'sortOrder',
       type: 'number',

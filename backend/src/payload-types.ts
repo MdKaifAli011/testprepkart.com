@@ -75,6 +75,8 @@ export interface Config {
     'download-menus': DownloadMenu;
     'sub-folders': SubFolder;
     'exam-category': ExamCategory;
+    'exam-info': ExamInfo;
+    'exam-sub-info': ExamSubInfo;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -89,6 +91,8 @@ export interface Config {
     'download-menus': DownloadMenusSelect<false> | DownloadMenusSelect<true>;
     'sub-folders': SubFoldersSelect<false> | SubFoldersSelect<true>;
     'exam-category': ExamCategorySelect<false> | ExamCategorySelect<true>;
+    'exam-info': ExamInfoSelect<false> | ExamInfoSelect<true>;
+    'exam-sub-info': ExamSubInfoSelect<false> | ExamSubInfoSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -420,14 +424,6 @@ export interface DownloadMenu {
    */
   exam: 'JEE Main' | 'JEE Advanced' | 'NEET' | 'GATE' | 'UPSC' | 'All Exams';
   /**
-   * Optional description for this download menu
-   */
-  description?: string | null;
-  /**
-   * Whether this menu is currently active and visible
-   */
-  isActive?: boolean | null;
-  /**
    * Order in which this menu appears (lower numbers first)
    */
   sortOrder?: number | null;
@@ -451,21 +447,9 @@ export interface SubFolder {
    */
   name: string;
   /**
-   * Select which download menu this sub folder belongs to
-   */
-  mainFolder: string | DownloadMenu;
-  /**
    * Display order within the parent menu (lower numbers appear first)
    */
   order?: number | null;
-  /**
-   * Optional description for this sub folder
-   */
-  description?: string | null;
-  /**
-   * Whether this sub folder is currently active and visible
-   */
-  isActive?: boolean | null;
   /**
    * Add multiple files for this sub folder
    */
@@ -494,6 +478,73 @@ export interface SubFolder {
         id?: string | null;
       }[]
     | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Manage exam information and study materials
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "exam-info".
+ */
+export interface ExamInfo {
+  id: string;
+  /**
+   * e.g., JEE Main Study Guide, NEET Preparation Materials, SAT Practice Tests
+   */
+  title: string;
+  /**
+   * Select the exam this information is for
+   */
+  exam: string | Exam;
+  /**
+   * Order in which this information appears (lower numbers first)
+   */
+  sortOrder?: number | null;
+  /**
+   * Add multiple files for this sub folder
+   */
+  files?:
+    | {
+        /**
+         * e.g., Physics Test 9, Chemistry Test 1 Solutions
+         */
+        title: string;
+        /**
+         * Enter the URL of the file
+         */
+        url: string;
+        /**
+         * Select the type of file
+         */
+        fileType: 'PDF File' | 'Word Document' | 'Excel Sheet' | 'Image' | 'Video' | 'Other';
+        /**
+         * Display order within sub folder (lower numbers first)
+         */
+        order?: number | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Organize exam information using sub information sections
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "exam-sub-info".
+ */
+export interface ExamSubInfo {
+  id: string;
+  title: string;
+  /**
+   * Select which exam information this sub info belongs to
+   */
+  parentInfo: string | ExamInfo;
+  /**
+   * Display order within the parent exam info (lower numbers appear first)
+   */
+  order?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -535,6 +586,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'exam-category';
         value: string | ExamCategory;
+      } | null)
+    | ({
+        relationTo: 'exam-info';
+        value: string | ExamInfo;
+      } | null)
+    | ({
+        relationTo: 'exam-sub-info';
+        value: string | ExamSubInfo;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -820,8 +879,6 @@ export interface PostSelect<T extends boolean = true> {
 export interface DownloadMenusSelect<T extends boolean = true> {
   name?: T;
   exam?: T;
-  description?: T;
-  isActive?: T;
   sortOrder?: T;
   subFolders?: T;
   updatedAt?: T;
@@ -833,10 +890,7 @@ export interface DownloadMenusSelect<T extends boolean = true> {
  */
 export interface SubFoldersSelect<T extends boolean = true> {
   name?: T;
-  mainFolder?: T;
   order?: T;
-  description?: T;
-  isActive?: T;
   files?:
     | T
     | {
@@ -860,6 +914,37 @@ export interface ExamCategorySelect<T extends boolean = true> {
   seo_keyword?: T;
   seo_description?: T;
   exams?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "exam-info_select".
+ */
+export interface ExamInfoSelect<T extends boolean = true> {
+  title?: T;
+  exam?: T;
+  sortOrder?: T;
+  files?:
+    | T
+    | {
+        title?: T;
+        url?: T;
+        fileType?: T;
+        order?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "exam-sub-info_select".
+ */
+export interface ExamSubInfoSelect<T extends boolean = true> {
+  title?: T;
+  parentInfo?: T;
+  order?: T;
   updatedAt?: T;
   createdAt?: T;
 }
