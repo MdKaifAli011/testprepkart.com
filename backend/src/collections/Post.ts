@@ -1,10 +1,11 @@
 import type { CollectionConfig } from 'payload'
+import { autoIdHook } from '../utils/autoId'
 
 export const Post: CollectionConfig = {
   slug: 'post',
   labels: {
-    singular: 'Post',
-    plural: 'Posts',
+    singular: 'Blog Post',
+    plural: 'Blog Posts',
   },
   access: {
     read: () => true,
@@ -14,25 +15,162 @@ export const Post: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'class', 'publishedDate'],
+    defaultColumns: ['customId', 'title', 'exam', 'category', 'status', 'createdAt', 'updatedAt'],
+    group: 'Blog',
+    description: 'Manage blog posts and articles',
+    listSearchableFields: ['title', 'slug', 'seo_title', 'seo_keywords'],
+    pagination: {
+      defaultLimit: 25,
+    },
   },
   fields: [
+    {
+      name: 'customId',
+      type: 'number',
+      required: true,
+      unique: true,
+      label: 'Post ID',
+      admin: {
+        description: 'Sequential post ID (auto-generated)',
+        position: 'sidebar',
+        readOnly: true,
+        hidden: true,
+      },
+    },
     {
       name: 'title',
       type: 'text',
       required: true,
+      label: 'Blog Title',
+      admin: {
+        description: 'Title of the blog post',
+        placeholder: 'Enter blog post title',
+      },
     },
     {
-      name: 'author',
+      name: 'slug',
       type: 'text',
-      defaultValue: 'Anonymous',
+      required: true,
+      unique: true,
+      label: 'URL Slug',
+      admin: {
+        description: 'URL-friendly version of the title (auto-generated)',
+        placeholder: 'blog-post-title',
+      },
+    },
+    {
+      name: 'description',
+      type: 'richText',
+      required: true,
+      label: 'Description',
+      admin: {
+        description: 'Main content of the blog post',
+      },
+    },
+    {
+      name: 'exam',
+      type: 'relationship',
+      relationTo: 'exam',
+      required: true,
+      label: 'Exam',
+      admin: {
+        description: 'Select the exam this blog post is related to',
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'category',
+      type: 'relationship',
+      relationTo: 'exam-category',
+      required: true,
+      label: 'Category',
+      admin: {
+        description: 'Select the category this blog post belongs to',
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'seo_title',
+      type: 'text',
+      label: 'SEO Title',
+      admin: {
+        description: 'SEO-optimized title for search engines',
+      },
+    },
+    {
+      name: 'seo_description',
+      type: 'textarea',
+      label: 'SEO Description',
+      admin: {
+        description: 'SEO-optimized description for search engines',
+      },
+    },
+    {
+      name: 'seo_keywords',
+      type: 'text',
+      label: 'SEO Keywords',
+      admin: {
+        description: 'Keywords for search engine optimization',
+      },
+    },
+    {
+      name: 'created_by',
+      type: 'relationship',
+      relationTo: 'users',
+      required: true,
+      label: 'Created By',
+      admin: {
+        description: 'User who created this blog post',
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'updated_by',
+      type: 'relationship',
+      relationTo: 'users',
+      label: 'Updated By',
+      admin: {
+        description: 'User who last updated this blog post',
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'blog_image',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Blog Image',
+      admin: {
+        description: 'Main image for the blog post',
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'status',
+      type: 'select',
+      required: true,
+      options: [
+        { label: 'Published', value: 'published' },
+        { label: 'Unpublished', value: 'unpublished' },
+        { label: 'Approved', value: 'approved' },
+        { label: 'Unapproved', value: 'unapproved' },
+      ],
+      defaultValue: 'unpublished',
+      label: 'Status',
+      admin: {
+        description: 'Publication and approval status of the blog post',
+        position: 'sidebar',
+      },
     },
     {
       name: 'publishedDate',
       type: 'date',
-      defaultValue: () => new Date().toISOString(),
+      label: 'Published Date',
+      admin: {
+        description: 'Date when the blog post was published',
+        position: 'sidebar',
+      },
     },
-  /*   {
+    /*   {
       name: 'class',
       type: 'select',
       hasMany: true,
@@ -310,4 +448,5 @@ export const Post: CollectionConfig = {
       ],
     },
   ],
+  // hooks: autoIdHook('post'), // Temporarily disabled
 }

@@ -77,6 +77,9 @@ export interface Config {
     'exam-category': ExamCategory;
     'exam-info': ExamInfo;
     'exam-sub-info': ExamSubInfo;
+    'blog-comments': BlogComment;
+    'blog-comment-replies': BlogCommentReply;
+    courses: Course;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -93,6 +96,9 @@ export interface Config {
     'exam-category': ExamCategorySelect<false> | ExamCategorySelect<true>;
     'exam-info': ExamInfoSelect<false> | ExamInfoSelect<true>;
     'exam-sub-info': ExamSubInfoSelect<false> | ExamSubInfoSelect<true>;
+    'blog-comments': BlogCommentsSelect<false> | BlogCommentsSelect<true>;
+    'blog-comment-replies': BlogCommentRepliesSelect<false> | BlogCommentRepliesSelect<true>;
+    courses: CoursesSelect<false> | CoursesSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -130,11 +136,21 @@ export interface UserAuthOperations {
   };
 }
 /**
+ * Manage admin users and editors
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
   id: string;
+  /**
+   * Sequential user ID (auto-generated)
+   */
+  customId?: number | null;
+  /**
+   * User role and permissions
+   */
+  role: 'admin' | 'editor' | 'user';
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -154,11 +170,20 @@ export interface User {
   password?: string | null;
 }
 /**
+ * Manage uploaded files and media
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
   id: string;
+  /**
+   * Sequential media ID (auto-generated)
+   */
+  customId: number;
+  /**
+   * Alternative text for accessibility
+   */
   alt: string;
   updatedAt: string;
   createdAt: string;
@@ -173,16 +198,25 @@ export interface Media {
   focalY?: number | null;
 }
 /**
+ * Manage individual exams
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "exam".
  */
 export interface Exam {
   id: string;
+  /**
+   * Sequential exam ID (auto-generated)
+   */
+  customId: number;
+  /**
+   * Name of the exam (e.g., JEE Main, NEET, GATE)
+   */
   examName: string;
   /**
-   * Select or create exam category
+   * Select the category this exam belongs to
    */
-  category?: (string | null) | ExamCategory;
+  category: string | ExamCategory;
   updatedAt: string;
   createdAt: string;
 }
@@ -195,34 +229,32 @@ export interface Exam {
 export interface ExamCategory {
   id: string;
   /**
-   * Category name for the exam
+   * Sequential category ID (auto-generated)
+   */
+  customId: number;
+  /**
+   * Name of the exam category (e.g., Engineering, Medical, Management)
    */
   categoryName: string;
   /**
-   * SEO title for search engines
-   */
-  seo_title?: string | null;
-  /**
-   * SEO keywords for search engines
-   */
-  seo_keyword?: string | null;
-  /**
-   * SEO description for search engines
-   */
-  seo_description?: string | null;
-  /**
-   * Select exams for this category
+   * Exams that belong to this category (auto-populated)
    */
   exams?: (string | Exam)[] | null;
   updatedAt: string;
   createdAt: string;
 }
 /**
+ * Manage contact leads and inquiries
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "leads".
  */
 export interface Lead {
   id: string;
+  /**
+   * Sequential lead ID (auto-generated)
+   */
+  customId: number;
   name: string;
   email: string;
   country: string;
@@ -241,13 +273,82 @@ export interface Lead {
   createdAt: string;
 }
 /**
+ * Manage blog posts and articles
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "post".
  */
 export interface Post {
   id: string;
+  /**
+   * Sequential post ID (auto-generated)
+   */
+  customId: number;
+  /**
+   * Title of the blog post
+   */
   title: string;
-  author?: string | null;
+  /**
+   * URL-friendly version of the title (auto-generated)
+   */
+  slug: string;
+  /**
+   * Main content of the blog post
+   */
+  description: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * Select the exam this blog post is related to
+   */
+  exam: string | Exam;
+  /**
+   * Select the category this blog post belongs to
+   */
+  category: string | ExamCategory;
+  /**
+   * SEO-optimized title for search engines
+   */
+  seo_title?: string | null;
+  /**
+   * SEO-optimized description for search engines
+   */
+  seo_description?: string | null;
+  /**
+   * Keywords for search engine optimization
+   */
+  seo_keywords?: string | null;
+  /**
+   * User who created this blog post
+   */
+  created_by: string | User;
+  /**
+   * User who last updated this blog post
+   */
+  updated_by?: (string | null) | User;
+  /**
+   * Main image for the blog post
+   */
+  blog_image?: (string | null) | Media;
+  /**
+   * Publication and approval status of the blog post
+   */
+  status: 'published' | 'unpublished' | 'approved' | 'unapproved';
+  /**
+   * Date when the blog post was published
+   */
   publishedDate?: string | null;
   layout?:
     | (
@@ -408,7 +509,7 @@ export interface Post {
   createdAt: string;
 }
 /**
- * Manage download menus for different exam types
+ * Manage download folders for different exam types
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "download-menus".
@@ -416,19 +517,39 @@ export interface Post {
 export interface DownloadMenu {
   id: string;
   /**
-   * e.g., Study Material, Sample Papers, Answer Keys, Past Year Papers
+   * Sequential download menu ID (auto-generated)
    */
-  name: string;
+  customId: number;
   /**
-   * Select the exam type this menu is for
+   * Name of the download folder/menu (e.g., Study Material, Sample Papers)
    */
-  exam: 'JEE Main' | 'JEE Advanced' | 'NEET' | 'GATE' | 'UPSC' | 'All Exams';
+  menuName: string;
+  /**
+   * Select the exam this download folder is for
+   */
+  exam: string | Exam;
+  /**
+   * Select the category this download folder belongs to
+   */
+  category: string | ExamCategory;
+  /**
+   * SEO title for search engines
+   */
+  seo_title?: string | null;
+  /**
+   * SEO description for search engines
+   */
+  seo_description?: string | null;
+  /**
+   * SEO keywords for search engines
+   */
+  seo_keywords?: string | null;
   /**
    * Order in which this menu appears (lower numbers first)
    */
   sortOrder?: number | null;
   /**
-   * Add sub folders to organize content within this menu
+   * Sub folders that belong to this download folder (auto-populated)
    */
   subFolders?: (string | SubFolder)[] | null;
   updatedAt: string;
@@ -443,9 +564,17 @@ export interface DownloadMenu {
 export interface SubFolder {
   id: string;
   /**
-   * e.g., Physics Sample Paper, Chemistry Sample Papers
+   * Sequential sub folder ID (auto-generated)
    */
-  name: string;
+  customId: number;
+  /**
+   * Name of the sub folder/menu (e.g., Physics Sample Papers, Chemistry Notes)
+   */
+  subMenuName: string;
+  /**
+   * Select which download folder this sub folder belongs to
+   */
+  menuId: string | DownloadMenu;
   /**
    * Display order within the parent menu (lower numbers appear first)
    */
@@ -490,13 +619,33 @@ export interface SubFolder {
 export interface ExamInfo {
   id: string;
   /**
-   * e.g., JEE Main Study Guide, NEET Preparation Materials, SAT Practice Tests
+   * Sequential exam info ID (auto-generated)
    */
-  title: string;
+  customId: number;
+  /**
+   * Name of the menu item (e.g., JEE Main Study Guide, NEET Preparation Materials)
+   */
+  menuName: string;
   /**
    * Select the exam this information is for
    */
   exam: string | Exam;
+  /**
+   * Select the category this information belongs to
+   */
+  category: string | ExamCategory;
+  /**
+   * SEO title for search engines
+   */
+  seo_title?: string | null;
+  /**
+   * SEO description for search engines
+   */
+  seo_description?: string | null;
+  /**
+   * SEO keywords for search engines
+   */
+  seo_keywords?: string | null;
   /**
    * Order in which this information appears (lower numbers first)
    */
@@ -536,15 +685,395 @@ export interface ExamInfo {
  */
 export interface ExamSubInfo {
   id: string;
-  title: string;
+  /**
+   * Sequential sub info ID (auto-generated)
+   */
+  customId: number;
+  /**
+   * Name of the sub menu item
+   */
+  subMenuName: string;
   /**
    * Select which exam information this sub info belongs to
    */
-  parentInfo: string | ExamInfo;
+  menuId: string | ExamInfo;
+  /**
+   * SEO title for search engines
+   */
+  seo_title?: string | null;
+  /**
+   * SEO description for search engines
+   */
+  seo_description?: string | null;
+  /**
+   * SEO keywords for search engines
+   */
+  seo_keywords?: string | null;
   /**
    * Display order within the parent exam info (lower numbers appear first)
    */
   order?: number | null;
+  layout?:
+    | (
+        | {
+            headline?: string | null;
+            subheadline?: string | null;
+            background?: (string | null) | Media;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'hero';
+          }
+        | {
+            body?: {
+              root: {
+                type: string;
+                children: {
+                  type: string;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'richText';
+          }
+        | {
+            title?: string | null;
+            listType?: ('bullet' | 'number' | 'checklist') | null;
+            items?:
+              | {
+                  text: string;
+                  description?: string | null;
+                  checked?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'list';
+          }
+        | {
+            image?: (string | null) | Media;
+            alt?: string | null;
+            caption?: string | null;
+            imageType?: ('fullWidth' | 'bookPreview' | 'regular') | null;
+            bookDetails?: {
+              bookTitle?: string | null;
+              author?: string | null;
+              publisher?: string | null;
+              isbn?: string | null;
+              pages?: number | null;
+              price?: string | null;
+              description?: string | null;
+              downloadLink?: string | null;
+              previewPages?: number | null;
+            };
+            fullWidth?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'image';
+          }
+        | {
+            url?: string | null;
+            title?: string | null;
+            start?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'youtube';
+          }
+        | {
+            buttons?:
+              | {
+                  text?: string | null;
+                  url?: string | null;
+                  variant?: ('primary' | 'secondary') | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'buttonRow';
+          }
+        | {
+            html?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'htmlEmbed';
+          }
+        | {
+            title?: string | null;
+            columns?:
+              | {
+                  name?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            rows?:
+              | {
+                  cells?:
+                    | {
+                        value?: string | null;
+                        id?: string | null;
+                      }[]
+                    | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'table';
+          }
+        | {
+            /**
+             * Upload a PDF file to preview inline
+             */
+            file?: (string | null) | Media;
+            title?: string | null;
+            height?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'pdf';
+          }
+        | {
+            title: string;
+            author: string;
+            publisher?: string | null;
+            isbn?: string | null;
+            pages?: number | null;
+            price?: string | null;
+            description?: string | null;
+            coverImage?: (string | null) | Media;
+            previewImages?:
+              | {
+                  image: string | Media;
+                  pageNumber?: number | null;
+                  caption?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            downloadLink?: string | null;
+            buyLink?: string | null;
+            rating?: number | null;
+            featured?: boolean | null;
+            categories?: ('jee' | 'neet' | 'sat' | 'study' | 'practice' | 'reference')[] | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'book';
+          }
+      )[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Manage blog comments
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-comments".
+ */
+export interface BlogComment {
+  id: string;
+  /**
+   * Sequential comment ID (auto-generated)
+   */
+  customId: number;
+  /**
+   * Select the blog post this comment belongs to
+   */
+  blog: string | Post;
+  /**
+   * Name of the comment author
+   */
+  author_name: string;
+  /**
+   * Email address of the comment author
+   */
+  author_email: string;
+  /**
+   * IP address of the comment author
+   */
+  comment_author_ip?: string | null;
+  /**
+   * Date and time when the comment was posted
+   */
+  comment_date: string;
+  /**
+   * The actual content of the comment
+   */
+  content: string;
+  /**
+   * Approval status of the comment
+   */
+  status: 'approved' | 'unapproved';
+  /**
+   * Replies to this comment (auto-populated)
+   */
+  replies?: (string | BlogCommentReply)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Manage replies to blog comments
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-comment-replies".
+ */
+export interface BlogCommentReply {
+  id: string;
+  /**
+   * Sequential reply ID (auto-generated)
+   */
+  customId: number;
+  /**
+   * Select the comment this reply belongs to
+   */
+  comment: string | BlogComment;
+  /**
+   * The actual content of the reply
+   */
+  reply_content: string;
+  /**
+   * Name of the reply author
+   */
+  reply_author_name: string;
+  /**
+   * Email address of the reply author
+   */
+  reply_author_email: string;
+  /**
+   * IP address of the reply author
+   */
+  reply_author_ip?: string | null;
+  /**
+   * Date and time when the reply was posted
+   */
+  reply_date: string;
+  /**
+   * Approval status of the reply
+   */
+  status: 'approved' | 'unapproved';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Manage courses and educational content
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "courses".
+ */
+export interface Course {
+  id: string;
+  /**
+   * Sequential course ID (auto-generated)
+   */
+  customId: number;
+  /**
+   * Select the exam category this course belongs to
+   */
+  category: string | ExamCategory;
+  /**
+   * Name of the course
+   */
+  course_name: string;
+  /**
+   * Brief description of the course
+   */
+  course_short_description: string;
+  /**
+   * Detailed description of the course content
+   */
+  description: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * Course price in your currency
+   */
+  price: number;
+  /**
+   * Course rating (0-5 stars)
+   */
+  rating?: number | null;
+  /**
+   * Course review or feedback
+   */
+  review?: string | null;
+  /**
+   * Course start date
+   */
+  start_date: string;
+  /**
+   * Course duration in minutes
+   */
+  duration: number;
+  /**
+   * Current number of enrolled students
+   */
+  student_count?: number | null;
+  /**
+   * Whether the course is online or offline
+   */
+  course_type: 'online' | 'offline';
+  /**
+   * Academic level the course is designed for
+   */
+  course_level:
+    | 'going_to_9th'
+    | 'going_to_10th'
+    | 'going_to_11th'
+    | 'going_to_12th'
+    | '12th_pass'
+    | 'graduate'
+    | 'post_graduate';
+  /**
+   * Any additional relevant information about the course
+   */
+  other_details?: string | null;
+  /**
+   * Name of the faculty teaching the course
+   */
+  faculty_name: string;
+  /**
+   * Image of the faculty member
+   */
+  faculty_image?: (string | null) | Media;
+  /**
+   * Main image for the course
+   */
+  course_image?: (string | null) | Media;
+  /**
+   * Introductory or promotional video for the course
+   */
+  course_video?: (string | null) | Media;
+  /**
+   * SEO-optimized title for search engines
+   */
+  seo_title?: string | null;
+  /**
+   * SEO-optimized description for search engines
+   */
+  seo_description?: string | null;
+  /**
+   * Keywords for search engine optimization
+   */
+  seo_keywords?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -594,6 +1123,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'exam-sub-info';
         value: string | ExamSubInfo;
+      } | null)
+    | ({
+        relationTo: 'blog-comments';
+        value: string | BlogComment;
+      } | null)
+    | ({
+        relationTo: 'blog-comment-replies';
+        value: string | BlogCommentReply;
+      } | null)
+    | ({
+        relationTo: 'courses';
+        value: string | Course;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -642,6 +1183,8 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  customId?: T;
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -664,6 +1207,7 @@ export interface UsersSelect<T extends boolean = true> {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
+  customId?: T;
   alt?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -682,6 +1226,7 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "exam_select".
  */
 export interface ExamSelect<T extends boolean = true> {
+  customId?: T;
   examName?: T;
   category?: T;
   updatedAt?: T;
@@ -692,6 +1237,7 @@ export interface ExamSelect<T extends boolean = true> {
  * via the `definition` "leads_select".
  */
 export interface LeadsSelect<T extends boolean = true> {
+  customId?: T;
   name?: T;
   email?: T;
   country?: T;
@@ -716,8 +1262,19 @@ export interface LeadsSelect<T extends boolean = true> {
  * via the `definition` "post_select".
  */
 export interface PostSelect<T extends boolean = true> {
+  customId?: T;
   title?: T;
-  author?: T;
+  slug?: T;
+  description?: T;
+  exam?: T;
+  category?: T;
+  seo_title?: T;
+  seo_description?: T;
+  seo_keywords?: T;
+  created_by?: T;
+  updated_by?: T;
+  blog_image?: T;
+  status?: T;
   publishedDate?: T;
   layout?:
     | T
@@ -877,8 +1434,13 @@ export interface PostSelect<T extends boolean = true> {
  * via the `definition` "download-menus_select".
  */
 export interface DownloadMenusSelect<T extends boolean = true> {
-  name?: T;
+  customId?: T;
+  menuName?: T;
   exam?: T;
+  category?: T;
+  seo_title?: T;
+  seo_description?: T;
+  seo_keywords?: T;
   sortOrder?: T;
   subFolders?: T;
   updatedAt?: T;
@@ -889,7 +1451,9 @@ export interface DownloadMenusSelect<T extends boolean = true> {
  * via the `definition` "sub-folders_select".
  */
 export interface SubFoldersSelect<T extends boolean = true> {
-  name?: T;
+  customId?: T;
+  subMenuName?: T;
+  menuId?: T;
   order?: T;
   files?:
     | T
@@ -909,10 +1473,8 @@ export interface SubFoldersSelect<T extends boolean = true> {
  * via the `definition` "exam-category_select".
  */
 export interface ExamCategorySelect<T extends boolean = true> {
+  customId?: T;
   categoryName?: T;
-  seo_title?: T;
-  seo_keyword?: T;
-  seo_description?: T;
   exams?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -922,8 +1484,13 @@ export interface ExamCategorySelect<T extends boolean = true> {
  * via the `definition` "exam-info_select".
  */
 export interface ExamInfoSelect<T extends boolean = true> {
-  title?: T;
+  customId?: T;
+  menuName?: T;
   exam?: T;
+  category?: T;
+  seo_title?: T;
+  seo_description?: T;
+  seo_keywords?: T;
   sortOrder?: T;
   files?:
     | T
@@ -942,9 +1509,225 @@ export interface ExamInfoSelect<T extends boolean = true> {
  * via the `definition` "exam-sub-info_select".
  */
 export interface ExamSubInfoSelect<T extends boolean = true> {
-  title?: T;
-  parentInfo?: T;
+  customId?: T;
+  subMenuName?: T;
+  menuId?: T;
+  seo_title?: T;
+  seo_description?: T;
+  seo_keywords?: T;
   order?: T;
+  layout?:
+    | T
+    | {
+        hero?:
+          | T
+          | {
+              headline?: T;
+              subheadline?: T;
+              background?: T;
+              id?: T;
+              blockName?: T;
+            };
+        richText?:
+          | T
+          | {
+              body?: T;
+              id?: T;
+              blockName?: T;
+            };
+        list?:
+          | T
+          | {
+              title?: T;
+              listType?: T;
+              items?:
+                | T
+                | {
+                    text?: T;
+                    description?: T;
+                    checked?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        image?:
+          | T
+          | {
+              image?: T;
+              alt?: T;
+              caption?: T;
+              imageType?: T;
+              bookDetails?:
+                | T
+                | {
+                    bookTitle?: T;
+                    author?: T;
+                    publisher?: T;
+                    isbn?: T;
+                    pages?: T;
+                    price?: T;
+                    description?: T;
+                    downloadLink?: T;
+                    previewPages?: T;
+                  };
+              fullWidth?: T;
+              id?: T;
+              blockName?: T;
+            };
+        youtube?:
+          | T
+          | {
+              url?: T;
+              title?: T;
+              start?: T;
+              id?: T;
+              blockName?: T;
+            };
+        buttonRow?:
+          | T
+          | {
+              buttons?:
+                | T
+                | {
+                    text?: T;
+                    url?: T;
+                    variant?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        htmlEmbed?:
+          | T
+          | {
+              html?: T;
+              id?: T;
+              blockName?: T;
+            };
+        table?:
+          | T
+          | {
+              title?: T;
+              columns?:
+                | T
+                | {
+                    name?: T;
+                    id?: T;
+                  };
+              rows?:
+                | T
+                | {
+                    cells?:
+                      | T
+                      | {
+                          value?: T;
+                          id?: T;
+                        };
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        pdf?:
+          | T
+          | {
+              file?: T;
+              title?: T;
+              height?: T;
+              id?: T;
+              blockName?: T;
+            };
+        book?:
+          | T
+          | {
+              title?: T;
+              author?: T;
+              publisher?: T;
+              isbn?: T;
+              pages?: T;
+              price?: T;
+              description?: T;
+              coverImage?: T;
+              previewImages?:
+                | T
+                | {
+                    image?: T;
+                    pageNumber?: T;
+                    caption?: T;
+                    id?: T;
+                  };
+              downloadLink?: T;
+              buyLink?: T;
+              rating?: T;
+              featured?: T;
+              categories?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-comments_select".
+ */
+export interface BlogCommentsSelect<T extends boolean = true> {
+  customId?: T;
+  blog?: T;
+  author_name?: T;
+  author_email?: T;
+  comment_author_ip?: T;
+  comment_date?: T;
+  content?: T;
+  status?: T;
+  replies?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-comment-replies_select".
+ */
+export interface BlogCommentRepliesSelect<T extends boolean = true> {
+  customId?: T;
+  comment?: T;
+  reply_content?: T;
+  reply_author_name?: T;
+  reply_author_email?: T;
+  reply_author_ip?: T;
+  reply_date?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "courses_select".
+ */
+export interface CoursesSelect<T extends boolean = true> {
+  customId?: T;
+  category?: T;
+  course_name?: T;
+  course_short_description?: T;
+  description?: T;
+  price?: T;
+  rating?: T;
+  review?: T;
+  start_date?: T;
+  duration?: T;
+  student_count?: T;
+  course_type?: T;
+  course_level?: T;
+  other_details?: T;
+  faculty_name?: T;
+  faculty_image?: T;
+  course_image?: T;
+  course_video?: T;
+  seo_title?: T;
+  seo_description?: T;
+  seo_keywords?: T;
   updatedAt?: T;
   createdAt?: T;
 }

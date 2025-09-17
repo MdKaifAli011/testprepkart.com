@@ -1,12 +1,17 @@
 import { CollectionConfig } from 'payload'
+import { autoIdHook } from '../utils/autoId'
 
 export const ExamInfo: CollectionConfig = {
   slug: 'exam-info',
   admin: {
-    useAsTitle: 'title',
-    defaultColumns: ['title', 'exam', 'createdAt'],
+    useAsTitle: 'menuName',
+    defaultColumns: ['customId', 'menuName', 'exam', 'category', 'createdAt', 'updatedAt'],
     description: 'Manage exam information and study materials',
     group: 'ExamInfo',
+    listSearchableFields: ['menuName', 'seo_title', 'seo_keywords'],
+    pagination: {
+      defaultLimit: 25,
+    },
   },
   access: {
     read: () => true,
@@ -16,13 +21,27 @@ export const ExamInfo: CollectionConfig = {
   },
   fields: [
     {
-      name: 'title',
+      name: 'customId',
+      type: 'number',
+      required: true,
+      unique: true,
+      label: 'Exam Info ID',
+      admin: {
+        description: 'Sequential exam info ID (auto-generated)',
+        position: 'sidebar',
+        readOnly: true,
+        hidden: true,
+      },
+    },
+    {
+      name: 'menuName',
       type: 'text',
       required: true,
-      label: 'Exam Info Name',
+      label: 'Menu Name',
       admin: {
-        description: 'e.g., JEE Main Study Guide, NEET Preparation Materials, SAT Practice Tests',
-        placeholder: 'Enter exam information name',
+        description:
+          'Name of the menu item (e.g., JEE Main Study Guide, NEET Preparation Materials)',
+        placeholder: 'Enter menu name',
       },
     },
     {
@@ -33,10 +52,45 @@ export const ExamInfo: CollectionConfig = {
       label: 'Exam',
       admin: {
         description: 'Select the exam this information is for',
+        position: 'sidebar',
       },
     },
-  
-   
+    {
+      name: 'category',
+      type: 'relationship',
+      relationTo: 'exam-category',
+      required: true,
+      label: 'Category',
+      admin: {
+        description: 'Select the category this information belongs to',
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'seo_title',
+      type: 'text',
+      label: 'SEO Title',
+      admin: {
+        description: 'SEO title for search engines',
+      },
+    },
+    {
+      name: 'seo_description',
+      type: 'textarea',
+      label: 'SEO Description',
+      admin: {
+        description: 'SEO description for search engines',
+      },
+    },
+    {
+      name: 'seo_keywords',
+      type: 'text',
+      label: 'SEO Keywords',
+      admin: {
+        description: 'SEO keywords for search engines',
+      },
+    },
+
     {
       name: 'sortOrder',
       type: 'number',
@@ -91,7 +145,7 @@ export const ExamInfo: CollectionConfig = {
             description: 'Select the type of file',
           },
         },
-     
+
         {
           name: 'order',
           type: 'number',
@@ -103,8 +157,7 @@ export const ExamInfo: CollectionConfig = {
         },
       ],
     },
-   
-   
   ],
   timestamps: true,
+  // hooks: autoIdHook('exam-info'), // Temporarily disabled
 }

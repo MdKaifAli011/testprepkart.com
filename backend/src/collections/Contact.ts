@@ -1,19 +1,17 @@
 import type { CollectionConfig } from 'payload'
+import { autoIdHook } from '../utils/autoId'
 
 export const Contact: CollectionConfig = {
   slug: 'leads',
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'email', 'mobile', 'class', 'createdAt'],
+    defaultColumns: ['customId', 'name', 'email', 'mobile', 'class', 'createdAt'],
     pagination: {
       defaultLimit: 50,
     },
     listSearchableFields: ['name', 'email', 'mobile', 'class'],
-    // Custom admin components removed to avoid JSX compilation issues
-    // Export functionality is available via:
-    // - /api/leads/export (all leads)
-    // - /api/leads/filter?format=csv (filtered leads)
-    // - /admin/leads (public dashboard)
+    group: 'Contacts',
+    description: 'Manage contact leads and inquiries',
   },
   access: {
     read: () => true,
@@ -22,6 +20,19 @@ export const Contact: CollectionConfig = {
     delete: () => true,
   },
   fields: [
+    {
+      name: 'customId',
+      type: 'number',
+      required: true,
+      unique: true,
+      label: 'Lead ID',
+      admin: {
+        description: 'Sequential lead ID (auto-generated)',
+        position: 'sidebar',
+        readOnly: true,
+        hidden: true,
+      },
+    },
     {
       name: 'name',
       type: 'text',
@@ -124,4 +135,5 @@ export const Contact: CollectionConfig = {
     },
   ],
   timestamps: true,
+  // hooks: autoIdHook('leads'), // Temporarily disabled
 }

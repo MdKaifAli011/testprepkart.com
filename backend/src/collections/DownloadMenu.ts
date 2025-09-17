@@ -1,12 +1,17 @@
 import { CollectionConfig } from 'payload'
+import { autoIdHook } from '../utils/autoId'
 
 export const DownloadMenu: CollectionConfig = {
   slug: 'download-menus',
   admin: {
-    useAsTitle: 'name',
-    defaultColumns: ['name', 'exam', 'createdAt'],
-    description: 'Manage download menus for different exam types',
+    useAsTitle: 'menuName',
+    defaultColumns: ['customId', 'menuName', 'exam', 'category', 'createdAt', 'updatedAt'],
+    description: 'Manage download folders for different exam types',
     group: 'DownloadMenus',
+    listSearchableFields: ['menuName', 'seo_title', 'seo_keywords'],
+    pagination: {
+      defaultLimit: 25,
+    },
   },
   access: {
     read: () => true,
@@ -16,33 +21,74 @@ export const DownloadMenu: CollectionConfig = {
   },
   fields: [
     {
-      name: 'name',
+      name: 'customId',
+      type: 'number',
+      required: true,
+      unique: true,
+      label: 'Download Menu ID',
+      admin: {
+        description: 'Sequential download menu ID (auto-generated)',
+        position: 'sidebar',
+        readOnly: true,
+        hidden: true,
+      },
+    },
+    {
+      name: 'menuName',
       type: 'text',
       required: true,
       label: 'Menu Name',
       admin: {
-        description: 'e.g., Study Material, Sample Papers, Answer Keys, Past Year Papers',
+        description: 'Name of the download folder/menu (e.g., Study Material, Sample Papers)',
         placeholder: 'Enter menu name',
       },
     },
     {
       name: 'exam',
-      type: 'select',
+      type: 'relationship',
+      relationTo: 'exam',
       required: true,
-      options: [
-        { label: 'JEE Main', value: 'JEE Main' },
-        { label: 'JEE Advanced', value: 'JEE Advanced' },
-        { label: 'NEET', value: 'NEET' },
-        { label: 'GATE', value: 'GATE' },
-        { label: 'UPSC', value: 'UPSC' },
-        { label: 'All Exams', value: 'All Exams' },
-      ],
-      label: 'Exam Type',
+      label: 'Exam',
       admin: {
-        description: 'Select the exam type this menu is for',
+        description: 'Select the exam this download folder is for',
+        position: 'sidebar',
       },
     },
- 
+    {
+      name: 'category',
+      type: 'relationship',
+      relationTo: 'exam-category',
+      required: true,
+      label: 'Category',
+      admin: {
+        description: 'Select the category this download folder belongs to',
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'seo_title',
+      type: 'text',
+      label: 'SEO Title',
+      admin: {
+        description: 'SEO title for search engines',
+      },
+    },
+    {
+      name: 'seo_description',
+      type: 'textarea',
+      label: 'SEO Description',
+      admin: {
+        description: 'SEO description for search engines',
+      },
+    },
+    {
+      name: 'seo_keywords',
+      type: 'text',
+      label: 'SEO Keywords',
+      admin: {
+        description: 'SEO keywords for search engines',
+      },
+    },
     {
       name: 'sortOrder',
       type: 'number',
@@ -59,10 +105,12 @@ export const DownloadMenu: CollectionConfig = {
       hasMany: true,
       label: 'Sub Folders',
       admin: {
-        description: 'Add sub folders to organize content within this menu',
+        description: 'Sub folders that belong to this download folder (auto-populated)',
         position: 'sidebar',
+        readOnly: true,
       },
     },
   ],
   timestamps: true,
+  // hooks: autoIdHook('download-menus'), // Temporarily disabled
 }

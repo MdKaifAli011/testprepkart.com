@@ -17,6 +17,9 @@ import { SubFolder } from './collections/SubFolder'
 import { ExamCategory } from './collections/ExamCategory'
 import { ExamInfo } from './collections/ExamInfo'
 import { ExamSubInfo } from './collections/ExamSubInfo'
+import { BlogComment } from './collections/BlogComment'
+import { BlogCommentReply } from './collections/BlogCommentReply'
+import { Courses } from './collections/Courses'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -28,7 +31,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Exam, Contact, Post, DownloadMenu, SubFolder, ExamCategory, ExamInfo, ExamSubInfo],
+  collections: [Users, Media, Exam, Contact, Post, DownloadMenu, SubFolder, ExamCategory, ExamInfo, ExamSubInfo, BlogComment, BlogCommentReply, Courses],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || 'your-secret-key-here-change-this-in-production',
   typescript: {

@@ -1,12 +1,17 @@
 import { CollectionConfig } from 'payload'
+import { autoIdHook } from '../utils/autoId'
 
 export const SubFolder: CollectionConfig = {
   slug: 'sub-folders',
   admin: {
-    useAsTitle: 'name',
-    defaultColumns: ['name', 'mainFolder', 'order', 'createdAt'],
+    useAsTitle: 'subMenuName',
+    defaultColumns: ['customId', 'subMenuName', 'menuId', 'createdAt', 'updatedAt'],
     group: 'DownloadMenus',
     description: 'Organize content within download menus using sub folders',
+    listSearchableFields: ['subMenuName'],
+    pagination: {
+      defaultLimit: 25,
+    },
   },
   access: {
     read: () => true,
@@ -16,15 +21,39 @@ export const SubFolder: CollectionConfig = {
   },
   fields: [
     {
-      name: 'name',
-      type: 'text',
+      name: 'customId',
+      type: 'number',
       required: true,
-      label: 'Sub Folder Name',
+      unique: true,
+      label: 'Sub Folder ID',
       admin: {
-        description: 'e.g., Physics Sample Paper, Chemistry Sample Papers',
+        description: 'Sequential sub folder ID (auto-generated)',
+        position: 'sidebar',
+        readOnly: true,
+        hidden: true,
       },
     },
-   
+    {
+      name: 'subMenuName',
+      type: 'text',
+      required: true,
+      label: 'Sub Menu Name',
+      admin: {
+        description: 'Name of the sub folder/menu (e.g., Physics Sample Papers, Chemistry Notes)',
+        placeholder: 'Enter sub menu name',
+      },
+    },
+    {
+      name: 'menuId',
+      type: 'relationship',
+      relationTo: 'download-menus',
+      required: true,
+      label: 'Menu ID (Parent Download Folder)',
+      admin: {
+        description: 'Select which download folder this sub folder belongs to',
+        position: 'sidebar',
+      },
+    },
     {
       name: 'order',
       type: 'number',
@@ -34,8 +63,7 @@ export const SubFolder: CollectionConfig = {
         placeholder: '0',
       },
     },
-  
- 
+
     {
       name: 'files',
       type: 'array',
@@ -103,4 +131,5 @@ export const SubFolder: CollectionConfig = {
     },
   ],
   timestamps: true,
+  // hooks: autoIdHook('sub-folders'), // Temporarily disabled
 }
