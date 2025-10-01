@@ -1,0 +1,26 @@
+{
+  "conversionInfo": {
+    "timestamp": "2025-09-30T09:47:06.143Z",
+    "sourceFile": "International_Entrance_Exams_for_satblogs.json",
+    "targetCollection": "satblogs",
+    "examId": "68da71472deacee8b09f05c1",
+    "examName": "International Entrance Exams.",
+    "categoriesFound": 9,
+    "schemaType": "Simplified (text fields, no richText)"
+  },
+  "statistics": {
+    "blogsInserted": 0,
+    "blogsSkipped": 0,
+    "fixedTitles": 0,
+    "fixedExcerpts": 0,
+    "fixedDefaults": 0,
+    "totalBlogs": 0,
+    "examMapped": "International Entrance Exams.",
+    "categoriesAvailable": 9
+  },
+  "dataQuality": {
+    "blogsWithEmptyTitle": 0,
+    "blogsWithEmptyExcerpt": 0,
+    "status": "Perfect"
+  }
+}

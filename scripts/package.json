@@ -1,0 +1,31 @@
+{
+  "name": "testprepkart-mongodb-import",
+  "version": "1.0.0",
+  "description": "MongoDB import script for TestPrepKart SQL data migration",
+  "main": "mongodb-import.js",
+  "type": "commonjs",
+  "scripts": {
+    "setup": "node setup.js",
+    "import": "node mongodb-import.js",
+    "import:clear": "node mongodb-import.js --clear",
+    "import:embedded": "node mongodb-import.js --embedded",
+    "import:clear-embedded": "node mongodb-import.js --clear --embedded",
+    "import:no-indexes": "node mongodb-import.js --no-indexes",
+    "validate": "node validate-data.js",
+    "test": "node test-import.js"
+  },
+  "dependencies": {
+    "mongodb": "^6.3.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.3.1"
+  },
+  "keywords": [
+    "mongodb",
+    "migration",
+    "import",
+    "testprepkart"
+  ],
+  "author": "TestPrepKart Team",
+  "license": "MIT"
+}

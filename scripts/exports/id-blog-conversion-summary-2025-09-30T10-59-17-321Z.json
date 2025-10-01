@@ -1,0 +1,24 @@
+{
+  "conversionInfo": {
+    "timestamp": "2025-09-30T10:59:17.316Z",
+    "sourceFile": "ibBologs.json",
+    "targetCollection": "idblogs",
+    "examId": "68da71472deacee8b09f05c1",
+    "examName": "International Entrance Exams.",
+    "schemaType": "Simplified (text fields, no richText, exam mapping only)"
+  },
+  "statistics": {
+    "blogsInserted": 388,
+    "blogsSkipped": 0,
+    "fixedTitles": 0,
+    "fixedExcerpts": 0,
+    "fixedDefaults": 0,
+    "totalBlogs": 388,
+    "examMapped": "International Entrance Exams."
+  },
+  "dataQuality": {
+    "blogsWithEmptyTitle": 0,
+    "blogsWithEmptyExcerpt": 0,
+    "status": "Perfect"
+  }
+}
