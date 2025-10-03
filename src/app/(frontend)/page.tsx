@@ -1,304 +1,301 @@
 import React from 'react'
 import Link from 'next/link'
-import './styles.css'
+import { getPayload } from 'payload'
+import config from '@/payload.config'
+import type { Metadata } from 'next'
 
-// Force dynamic rendering to avoid build-time database connections
 export const dynamic = 'force-dynamic'
 
+// Generate metadata for SEO
+export const metadata: Metadata = {
+  title: 'TestPrepKart | JEE, NEET, SAT & Competitive Exam Preparation',
+  description:
+    'TestPrepKart - Your comprehensive platform for JEE, NEET, SAT, and other competitive exam preparation. Expert faculty, quality courses, and proven success rates.',
+  keywords:
+    'test preparation, JEE, NEET, SAT, competitive exams, online courses, exam coaching, study materials',
+  openGraph: {
+    title: 'TestPrepKart | Ace Your Competitive Exams',
+    description: 'Comprehensive exam preparation platform with expert guidance',
+    type: 'website',
+  },
+}
+
+// Helper to get proper image URL
+function getImageUrl(imageUrl: string | null | undefined): string | null {
+  if (!imageUrl) return null
+
+  // If it's already a full URL (http:// or https://), return as is
+  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+    return imageUrl
+  }
+
+  // If it starts with /, it's an absolute path from the domain
+  if (imageUrl.startsWith('/')) {
+    return imageUrl
+  }
+
+  // Otherwise, it's a relative path - return null to avoid 404s
+  return null
+}
+
 export default async function HomePage() {
-  // Initialize with empty data - will be populated by client-side fetching if needed
-  const courses: any[] = []
-  const user = null
+  const payload = await getPayload({ config })
+
+  // Fetch featured courses with error handling
+  let coursesResponse
+  let jeeBlogs
+  let neetBlogs
+
+  try {
+    ;[coursesResponse, jeeBlogs, neetBlogs] = await Promise.all([
+      payload.find({
+        collection: 'courses',
+        limit: 6,
+        sort: '-createdAt',
+        depth: 1, // Include related data
+      }),
+      payload.find({
+        collection: 'Jeeblogs',
+        limit: 3,
+        where: { status: { equals: 'published' } },
+        sort: '-createdAt',
+      }),
+      payload.find({
+        collection: 'Neetblogs',
+        limit: 3,
+        where: { status: { equals: 'published' } },
+        sort: '-createdAt',
+      }),
+    ])
+  } catch (error) {
+    console.error('Error fetching homepage data:', error)
+    // Set default empty responses
+    coursesResponse = { docs: [], totalDocs: 0, totalPages: 0, page: 1 }
+    jeeBlogs = { docs: [], totalDocs: 0, totalPages: 0, page: 1 }
+    neetBlogs = { docs: [], totalDocs: 0, totalPages: 0, page: 1 }
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">Learn Without Limits</h1>
-            <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
-              Discover thousands of courses, learn from industry experts, and advance your career
-              with our comprehensive learning platform.
+      <section className="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-500 text-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center animate-fadeIn">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6">Welcome to TestPrepKart</h1>
+            <p className="text-xl md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto">
+              Your comprehensive platform for JEE, NEET, SAT, and other competitive exam preparation
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/courses"
-                className="bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors duration-200"
+                className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors duration-200 shadow-lg"
               >
-                Browse Courses
+                Explore Courses
               </Link>
               <Link
-                href="/courses"
-                className="border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors duration-200"
+                href="/blogs"
+                className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors duration-200"
               >
-                View All Courses
+                Read Blogs
               </Link>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Stats Section */}
-      <div className="bg-white py-16">
+      <section className="py-12 bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-4xl font-bold text-gray-900 mb-2">150+</div>
-              <div className="text-gray-600">Courses Available</div>
+              <div className="text-4xl font-bold text-blue-600">{coursesResponse.totalDocs}+</div>
+              <div className="text-gray-600 mt-2">Courses</div>
             </div>
             <div>
-              <div className="text-4xl font-bold text-gray-900 mb-2">50K+</div>
-              <div className="text-gray-600">Students Enrolled</div>
+              <div className="text-4xl font-bold text-purple-600">500+</div>
+              <div className="text-gray-600 mt-2">Students</div>
             </div>
             <div>
-              <div className="text-4xl font-bold text-gray-900 mb-2">4.8</div>
-              <div className="text-gray-600">Average Rating</div>
+              <div className="text-4xl font-bold text-pink-600">50+</div>
+              <div className="text-gray-600 mt-2">Expert Faculty</div>
             </div>
             <div>
-              <div className="text-4xl font-bold text-gray-900 mb-2">95%</div>
-              <div className="text-gray-600">Success Rate</div>
+              <div className="text-4xl font-bold text-indigo-600">95%</div>
+              <div className="text-gray-600 mt-2">Success Rate</div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Featured Courses */}
-      <div className="py-16">
+      {/* Featured Courses Section */}
+      <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Courses</h2>
-            <p className="text-xl text-gray-600">
-              Start your learning journey with our most popular courses
+            <h2 className="text-4xl font-bold mb-4 gradient-text">Featured Courses</h2>
+            <p className="text-gray-600 text-lg">
+              Discover our most popular courses designed to help you succeed
             </p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {courses.slice(0, 3).map((course, index) => {
-              const getCategoryName = (category: any) => {
-                if (typeof category === 'object' && category?.menuName) {
-                  return category.menuName
-                }
-                if (typeof category === 'string') {
-                  return category
-                }
-                return 'General'
-              }
-
-              const categoryColors = [
-                'bg-blue-100 text-blue-800',
-                'bg-green-100 text-green-800',
-                'bg-purple-100 text-purple-800',
-              ]
-
-              return (
-                <div
-                  key={course.id}
-                  className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-                >
-                  <img
-                    src={course.course_image || '/images/default-course.jpg'}
-                    alt={course.course_name}
-                    className="w-full h-48 object-cover"
-                    loading="lazy"
-                  />
-                  <div className="p-6">
-                    <span
-                      className={`${categoryColors[index % 3]} text-xs font-medium px-3 py-1 rounded-full mb-3 inline-block`}
-                    >
-                      {getCategoryName(course.category)}
-                    </span>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight">
-                      {course.course_name}
-                    </h3>
-                    <p className="text-gray-600 mb-4 line-clamp-2">
-                      {course.course_short_description ||
-                        'Learn new skills and advance your career with this comprehensive course.'}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-2xl font-bold text-gray-900">
-                        {course.price ? `$${course.price}` : 'Free'}
-                      </span>
-                      <Link
-                        href={`/courses/${course.id}`}
-                        className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium"
-                      >
-                        View Course
-                      </Link>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {coursesResponse.docs.map((course) => (
+              <Link
+                key={course.id}
+                href={`/courses/${course.id}`}
+                className="bg-white rounded-xl shadow-md overflow-hidden card-hover"
+              >
+                <div className="relative h-48 bg-gradient-to-r from-blue-400 to-purple-500">
+                  {getImageUrl(course.course_image) ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={getImageUrl(course.course_image)!}
+                      alt={course.course_name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-white text-2xl font-bold">
+                      {course.course_name.charAt(0)}
                     </div>
+                  )}
+                  {course.course_type && (
+                    <span className="absolute top-4 right-4 bg-white text-blue-600 px-3 py-1 rounded-full text-xs font-semibold uppercase">
+                      {course.course_type}
+                    </span>
+                  )}
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold mb-2 text-gray-900 line-clamp-2">
+                    {course.course_name}
+                  </h3>
+                  {course.course_short_description && (
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                      {course.course_short_description}
+                    </p>
+                  )}
+                  <div className="flex items-center justify-between">
+                    <div>
+                      {course.rating && (
+                        <div className="flex items-center gap-1">
+                          <span className="text-yellow-500">★</span>
+                          <span className="font-semibold">{course.rating}</span>
+                          {course.review && (
+                            <span className="text-gray-500 text-sm">({course.review})</span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    {course.price && (
+                      <div className="text-blue-600 font-bold text-lg">₹{course.price}</div>
+                    )}
                   </div>
                 </div>
-              )
-            })}
+              </Link>
+            ))}
           </div>
-
           <div className="text-center mt-12">
             <Link
               href="/courses"
-              className="bg-gray-200 text-gray-800 px-8 py-3 rounded-lg hover:bg-gray-300 transition-colors duration-200"
+              className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200"
             >
               View All Courses
             </Link>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Course Categories */}
-      <div className="bg-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Popular Course Categories</h2>
-            <p className="text-xl text-gray-600">
-              Explore courses by category and find your perfect learning path
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Category 1 */}
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 text-center hover:shadow-lg transition-shadow duration-300">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg
-                  className="w-8 h-8 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-                  />
-                </svg>
+      {/* Blog Sections */}
+      {jeeBlogs.totalDocs > 0 && (
+        <section className="py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center mb-12">
+              <div>
+                <h2 className="text-4xl font-bold gradient-text">JEE Preparation Blogs</h2>
+                <p className="text-gray-600 mt-2">Latest insights and tips for JEE aspirants</p>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Web Development</h3>
-              <p className="text-gray-600 mb-4">
-                Learn modern web technologies and build amazing websites
-              </p>
-              <Link
-                href="/courses?category=web-development"
-                className="text-blue-600 hover:text-blue-700 font-medium"
-              >
-                View Courses →
+              <Link href="/blogs/jee" className="text-blue-600 hover:text-blue-700 font-semibold">
+                View All →
               </Link>
             </div>
-
-            {/* Category 2 */}
-            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-6 text-center hover:shadow-lg transition-shadow duration-300">
-              <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg
-                  className="w-8 h-8 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {jeeBlogs.docs.map((blog) => (
+                <Link
+                  key={blog.id}
+                  href={`/blogs/jee/${blog.id}`}
+                  className="bg-gray-50 rounded-xl overflow-hidden card-hover"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Data Science</h3>
-              <p className="text-gray-600 mb-4">
-                Master data analysis and machine learning techniques
-              </p>
-              <Link
-                href="/courses?category=data-science"
-                className="text-green-600 hover:text-green-700 font-medium"
-              >
-                View Courses →
-              </Link>
-            </div>
-
-            {/* Category 3 */}
-            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-6 text-center hover:shadow-lg transition-shadow duration-300">
-              <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg
-                  className="w-8 h-8 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h4"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Design</h3>
-              <p className="text-gray-600 mb-4">
-                Create beautiful designs with modern tools and techniques
-              </p>
-              <Link
-                href="/courses?category=design"
-                className="text-purple-600 hover:text-purple-700 font-medium"
-              >
-                View Courses →
-              </Link>
-            </div>
-
-            {/* Category 4 */}
-            <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-6 text-center hover:shadow-lg transition-shadow duration-300">
-              <div className="w-16 h-16 bg-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg
-                  className="w-8 h-8 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Marketing</h3>
-              <p className="text-gray-600 mb-4">
-                Learn digital marketing strategies that drive results
-              </p>
-              <Link
-                href="/courses?category=marketing"
-                className="text-orange-600 hover:text-orange-700 font-medium"
-              >
-                View Courses →
-              </Link>
+                  <div className="p-6">
+                    <div className="text-sm text-blue-600 font-semibold mb-2">JEE</div>
+                    <h3 className="text-xl font-bold mb-3 text-gray-900 line-clamp-2">
+                      {blog.title}
+                    </h3>
+                    {blog.excerpt && (
+                      <p className="text-gray-600 text-sm mb-4 line-clamp-3">{blog.excerpt}</p>
+                    )}
+                    <div className="flex items-center justify-between text-sm text-gray-500">
+                      <span>{blog.author}</span>
+                      {blog.readTime && <span>{blog.readTime} min read</span>}
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
+        </section>
+      )}
 
-          <div className="text-center mt-12">
-            <Link
-              href="/courses"
-              className="bg-gray-200 text-gray-800 px-8 py-3 rounded-lg hover:bg-gray-300 transition-colors duration-200"
-            >
-              Browse All Categories
-            </Link>
+      {neetBlogs.totalDocs > 0 && (
+        <section className="py-16 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center mb-12">
+              <div>
+                <h2 className="text-4xl font-bold gradient-text">NEET Preparation Blogs</h2>
+                <p className="text-gray-600 mt-2">Expert guidance for medical entrance exams</p>
+              </div>
+              <Link href="/blogs/neet" className="text-blue-600 hover:text-blue-700 font-semibold">
+                View All →
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {neetBlogs.docs.map((blog) => (
+                <Link
+                  key={blog.id}
+                  href={`/blogs/neet/${blog.id}`}
+                  className="bg-white rounded-xl overflow-hidden card-hover"
+                >
+                  <div className="p-6">
+                    <div className="text-sm text-purple-600 font-semibold mb-2">NEET</div>
+                    <h3 className="text-xl font-bold mb-3 text-gray-900 line-clamp-2">
+                      {blog.title}
+                    </h3>
+                    {blog.excerpt && (
+                      <p className="text-gray-600 text-sm mb-4 line-clamp-3">{blog.excerpt}</p>
+                    )}
+                    <div className="flex items-center justify-between text-sm text-gray-500">
+                      <span>{blog.author}</span>
+                      {blog.readTime && <span>{blog.readTime} min read</span>}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      </div>
+        </section>
+      )}
 
       {/* CTA Section */}
-      <div className="bg-blue-600 py-16">
+      <section className="py-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">Ready to Start Learning?</h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of students who are already advancing their careers with our courses.
+          <h2 className="text-4xl font-bold mb-4">Ready to Start Your Journey?</h2>
+          <p className="text-xl mb-8 text-blue-100">
+            Join thousands of students who are achieving their dreams
           </p>
           <Link
             href="/courses"
-            className="bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors duration-200"
+            className="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors duration-200 shadow-lg"
           >
             Get Started Today
           </Link>
         </div>
-      </div>
-
-      {/* Admin Link - removed for now to avoid build-time dependencies */}
+      </section>
     </div>
   )
 }

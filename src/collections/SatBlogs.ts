@@ -53,10 +53,38 @@ export const SatBlogs: CollectionConfig = {
     },
     {
       name: 'descriptionHtml',
-      type: 'textarea',
+      type: 'richText',
       admin: {
         description: 'Original HTML content as backup (from SQL import)',
         readOnly: true,
+      },
+      defaultValue: {
+        root: {
+          type: 'root',
+          format: '',
+          indent: 0,
+          version: 1,
+          children: [
+            {
+              type: 'paragraph',
+              format: '',
+              indent: 0,
+              version: 1,
+              children: [
+                {
+                  type: 'text',
+                  format: 0,
+                  style: '',
+                  text: '',
+                  version: 1,
+                  mode: 'normal'
+                }
+              ],
+              direction: 'ltr'
+            }
+          ],
+          direction: 'ltr'
+        }
       },
     },
     {

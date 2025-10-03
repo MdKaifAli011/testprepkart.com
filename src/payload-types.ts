@@ -445,10 +445,6 @@ export interface DownloadFile {
 export interface Course {
   id: string;
   /**
-   * Original ID from the imported data
-   */
-  originalId?: number | null;
-  /**
    * The category this course belongs to
    */
   category: string | ExamCategory;
@@ -461,29 +457,92 @@ export interface Course {
    */
   course_short_description?: string | null;
   /**
-   * Detailed description of the course
+   * Flexible content blocks for detailed course description
    */
-  description?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
+  description?:
+    | (
+        | {
+            content: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'richText';
+          }
+        | {
+            url: string;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'youtube';
+          }
+        | {
+            rows?:
+              | {
+                  columns?:
+                    | {
+                        value: string;
+                        id?: string | null;
+                      }[]
+                    | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'table';
+          }
+        | {
+            items?:
+              | {
+                  text: string;
+                  id?: string | null;
+                }[]
+              | null;
+            ordered?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'list';
+          }
+        | {
+            code: string;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'html';
+          }
+        | {
+            image: string | Media;
+            caption?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'image';
+          }
+        | {
+            text: string;
+            author?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'quote';
+          }
+      )[]
+    | null;
   /**
    * Price of the course
    */
   price?: number | null;
   /**
-   * Course rating (0-5)
+   * Course rating
    */
   rating?: number | null;
   /**
@@ -505,29 +564,72 @@ export interface Course {
   /**
    * Type of course delivery
    */
-  course_type?: ('online' | 'offline' | 'hybrid') | null;
+  course_type?: 'online' | null;
   /**
    * Difficulty level of the course
    */
-  course_level?: ('1' | '2' | '3') | null;
+  course_level?: string | null;
   /**
-   * Additional course details
+   * Additional course details and information
    */
-  other_details?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
+  other_details?:
+    | (
+        | {
+            content: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'richText';
+          }
+        | {
+            items?:
+              | {
+                  text: string;
+                  id?: string | null;
+                }[]
+              | null;
+            ordered?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'list';
+          }
+        | {
+            rows?:
+              | {
+                  columns?:
+                    | {
+                        value: string;
+                        id?: string | null;
+                      }[]
+                    | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'table';
+          }
+        | {
+            code: string;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'html';
+          }
+      )[]
+    | null;
   /**
    * Name of the faculty/instructor
    */
@@ -556,8 +658,8 @@ export interface Course {
    * SEO keywords for the course
    */
   seo_keywords?: string | null;
-  createdAt: string;
   updatedAt: string;
+  createdAt: string;
 }
 /**
  * Engineering and JEE entrance exam related blog posts
@@ -799,7 +901,21 @@ export interface Satblog {
   /**
    * Original HTML content as backup (from SQL import)
    */
-  descriptionHtml?: string | null;
+  descriptionHtml?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   /**
    * Short description for blog previews
    */
@@ -1280,11 +1396,80 @@ export interface DownloadFilesSelect<T extends boolean = true> {
  * via the `definition` "courses_select".
  */
 export interface CoursesSelect<T extends boolean = true> {
-  originalId?: T;
   category?: T;
   course_name?: T;
   course_short_description?: T;
-  description?: T;
+  description?:
+    | T
+    | {
+        richText?:
+          | T
+          | {
+              content?: T;
+              id?: T;
+              blockName?: T;
+            };
+        youtube?:
+          | T
+          | {
+              url?: T;
+              id?: T;
+              blockName?: T;
+            };
+        table?:
+          | T
+          | {
+              rows?:
+                | T
+                | {
+                    columns?:
+                      | T
+                      | {
+                          value?: T;
+                          id?: T;
+                        };
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        list?:
+          | T
+          | {
+              items?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              ordered?: T;
+              id?: T;
+              blockName?: T;
+            };
+        html?:
+          | T
+          | {
+              code?: T;
+              id?: T;
+              blockName?: T;
+            };
+        image?:
+          | T
+          | {
+              image?: T;
+              caption?: T;
+              id?: T;
+              blockName?: T;
+            };
+        quote?:
+          | T
+          | {
+              text?: T;
+              author?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
   price?: T;
   rating?: T;
   review?: T;
@@ -1293,7 +1478,54 @@ export interface CoursesSelect<T extends boolean = true> {
   student_count?: T;
   course_type?: T;
   course_level?: T;
-  other_details?: T;
+  other_details?:
+    | T
+    | {
+        richText?:
+          | T
+          | {
+              content?: T;
+              id?: T;
+              blockName?: T;
+            };
+        list?:
+          | T
+          | {
+              items?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              ordered?: T;
+              id?: T;
+              blockName?: T;
+            };
+        table?:
+          | T
+          | {
+              rows?:
+                | T
+                | {
+                    columns?:
+                      | T
+                      | {
+                          value?: T;
+                          id?: T;
+                        };
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        html?:
+          | T
+          | {
+              code?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
   faculty_name?: T;
   faculty_image?: T;
   course_image?: T;
@@ -1301,8 +1533,8 @@ export interface CoursesSelect<T extends boolean = true> {
   seo_title?: T;
   seo_description?: T;
   seo_keywords?: T;
-  createdAt?: T;
   updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

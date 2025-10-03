@@ -7,25 +7,30 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
-import { Users } from './collections/Users'
-import { Media } from './collections/Media'
-import { Exams } from './collections/Exams'
-import { ExamCategories } from './collections/ExamCategories'
-import { ExamInfos } from './collections/ExamInfos'
-import { ExamSubInfos } from './collections/ExamSubInfos'
-import { DownloadFolders } from './collections/DownloadFolders'
-import { DownloadSubFolders } from './collections/DownloadSubFolders'
-import { DownloadFiles } from './collections/DownloadFiles'
-import { Courses } from './collections/Courses'
-import { JeeBlogs } from './collections/JeeBlogs'
-import { NeetBlogs } from './collections/NeetBlogs'
-import { SchoolBlogs } from './collections/SchoolBlogs'
-import { SatBlogs } from './collections/SatBlogs'
-import { IdBlogs } from './collections/IdBlogs'
-import { ApBlogs } from './collections/ApBlogs'
+// Import collections and groups from index
+import { 
+  Users,
+  coreCollections,
+  examCollections,
+  downloadCollections,
+  courseCollections,
+  blogCollections
+} from './collections'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+// Collections are now imported from the index file
+
+// Log database connection info
+const databaseUrl = process.env.DATABASE_URI || ''
+const dbName = databaseUrl.split('/').pop()?.split('?')[0] || 'Unknown'
+
+console.log('\n🔌 Database Configuration:')
+console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+console.log(`📊 Database Name: ${dbName}`)
+console.log(`🌐 Connection URL: ${databaseUrl.replace(/\/\/[^:]+:[^@]+@/, '//*****:*****@')}`)
+console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
 
 export default buildConfig({
   admin: {
@@ -35,31 +40,51 @@ export default buildConfig({
     },
   },
   collections: [
-    Users,
-    Media,
-    Exams,
-    ExamCategories,
-    ExamInfos,
-    ExamSubInfos,
-    DownloadFolders,
-    DownloadSubFolders,
-    DownloadFiles,
-    Courses,
-    JeeBlogs,
-    NeetBlogs,
-    SchoolBlogs,
-    SatBlogs,
-    IdBlogs,
-    ApBlogs,
+    // Core Collections
+    ...coreCollections,
+    
+    // Exam Collections
+    ...examCollections,
+    
+    // Download Collections
+    ...downloadCollections,
+    
+    // Course Collections
+    ...courseCollections,
+    
+    // Blog Collections
+    ...blogCollections,
   ],
-  editor: lexicalEditor(),
+  editor: lexicalEditor({
+    features: ({ defaultFeatures }) => [
+      ...defaultFeatures,
+    ],
+  }),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
+    connectOptions: {
+      serverSelectionTimeoutMS: 5000,
+    },
   }),
+  onInit: async (_payload) => {
+    const totalCollections = coreCollections.length + examCollections.length + downloadCollections.length + courseCollections.length + blogCollections.length
+    
+    console.log('\n✅ Payload CMS Initialized Successfully!')
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+    console.log(`✅ Database Connected: ${dbName}`)
+    console.log(`📦 Collections Loaded: ${totalCollections}`)
+    console.log(`   - Core: ${coreCollections.length}`)
+    console.log(`   - Exams: ${examCollections.length}`)
+    console.log(`   - Downloads: ${downloadCollections.length}`)
+    console.log(`   - Courses: ${courseCollections.length}`)
+    console.log(`   - Blogs: ${blogCollections.length}`)
+    console.log(`🔐 Admin User Collection: ${Users.slug}`)
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
+  },
   sharp,
   plugins: [
     payloadCloudPlugin(),

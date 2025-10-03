@@ -40,6 +40,34 @@ export const ExamInfos: CollectionConfig = {
       admin: {
         description: 'Description of the exam info',
       },
+      defaultValue: {
+        root: {
+          type: 'root',
+          format: '',
+          indent: 0,
+          version: 1,
+          children: [
+            {
+              type: 'paragraph',
+              format: '',
+              indent: 0,
+              version: 1,
+              children: [
+                {
+                  type: 'text',
+                  format: 0,
+                  style: '',
+                  text: '',
+                  version: 1,
+                  mode: 'normal'
+                }
+              ],
+              direction: 'ltr'
+            }
+          ],
+          direction: 'ltr'
+        }
+      },
     },
     {
       name: 'seo',
