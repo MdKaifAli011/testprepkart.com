@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { getPayload } from 'payload'
 import config from '@/payload.config'
 import type { Metadata } from 'next'
@@ -145,10 +146,11 @@ export default async function HomePage() {
               >
                 <div className="relative h-48 bg-gradient-to-r from-blue-400 to-purple-500">
                   {getImageUrl(course.course_image) ? (
-                    /* eslint-disable-next-line @next/next/no-img-element */
-                    <img
+                    <Image
                       src={getImageUrl(course.course_image)!}
                       alt={course.course_name}
+                      width={400}
+                      height={200}
                       className="w-full h-full object-cover"
                     />
                   ) : (
