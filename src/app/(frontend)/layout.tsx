@@ -1,5 +1,6 @@
 import React from 'react'
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import Navigation from '@/components/Navigation'
 import './styles.css'
 
@@ -29,19 +30,19 @@ export default function FrontendLayout({ children }: { children: React.ReactNode
                 <h4 className="font-semibold mb-4">Quick Links</h4>
                 <ul className="space-y-2 text-sm text-gray-400">
                   <li>
-                    <a href="/" className="hover:text-white transition-colors">
+                    <Link href="/" className="hover:text-white transition-colors">
                       Home
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="/courses" className="hover:text-white transition-colors">
+                    <Link href="/courses" className="hover:text-white transition-colors">
                       Courses
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="/blogs" className="hover:text-white transition-colors">
+                    <Link href="/blogs" className="hover:text-white transition-colors">
                       Blogs
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -49,19 +50,19 @@ export default function FrontendLayout({ children }: { children: React.ReactNode
                 <h4 className="font-semibold mb-4">Exam Prep</h4>
                 <ul className="space-y-2 text-sm text-gray-400">
                   <li>
-                    <a href="/blogs/jee" className="hover:text-white transition-colors">
+                    <Link href="/blogs/jee" className="hover:text-white transition-colors">
                       JEE Preparation
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="/blogs/neet" className="hover:text-white transition-colors">
+                    <Link href="/blogs/neet" className="hover:text-white transition-colors">
                       NEET Preparation
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="/blogs/sat" className="hover:text-white transition-colors">
+                    <Link href="/blogs/sat" className="hover:text-white transition-colors">
                       SAT Preparation
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>

@@ -21,13 +21,14 @@ export async function GET() {
       category:
         course.category && typeof course.category === 'object'
           ? {
-              id: (course.category as any).id,
+              id: (course.category as { id: string }).id,
               categoryName:
-                (course.category as any).categoryName || (course.category as any).menuName,
-              originalId: (course.category as any).originalId,
+                (course.category as { categoryName?: string; menuName?: string }).categoryName || 
+                (course.category as { categoryName?: string; menuName?: string }).menuName,
+              originalId: (course.category as { originalId: number | null | undefined })?.originalId?.toString() || null,
             }
           : null,
-      originalId: course.originalId,
+      // originalId: course.originalId?.toString() || null, // Removed as it doesn't exist on Course type
     }))
 
     // Test exam_categories with populated relationships
@@ -44,12 +45,12 @@ export async function GET() {
       exam:
         category.exam && typeof category.exam === 'object'
           ? {
-              id: (category.exam as any).id,
-              examName: (category.exam as any).examName,
-              originalId: (category.exam as any).originalId,
+              id: (category.exam as { id: string }).id,
+              examName: (category.exam as { examName: string }).examName,
+              originalId: (category.exam as { originalId: number | null | undefined })?.originalId?.toString() || null,
             }
           : null,
-      originalId: category.originalId,
+      // originalId: category.originalId?.toString() || null, // Removed as it doesn't exist on category type
     }))
 
     return NextResponse.json({
@@ -62,14 +63,14 @@ export async function GET() {
         totalCategories: categoriesResult.totalDocs,
       },
     })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Relationship test failed:', error)
 
     return NextResponse.json(
       {
         success: false,
-        error: error.message,
-        errorType: error.name,
+        error: (error as Error).message,
+        errorType: (error as Error).name,
         message: 'Relationship test failed',
       },
       { status: 500 },

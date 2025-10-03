@@ -5,9 +5,14 @@ import config from '@/payload.config'
 
 export const dynamic = 'force-dynamic'
 
-export default async function ApBlogsPage({ searchParams }: { searchParams: { page?: string } }) {
+export default async function ApBlogsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>
+}) {
   const payload = await getPayload({ config })
-  const page = Number(searchParams.page) || 1
+  const resolvedSearchParams = await searchParams
+  const page = Number(resolvedSearchParams.page) || 1
 
   const blogsResponse = await payload.find({
     collection: 'apblogs',

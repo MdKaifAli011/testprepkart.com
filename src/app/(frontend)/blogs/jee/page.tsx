@@ -1,13 +1,19 @@
 import React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { getPayload } from 'payload'
 import config from '@/payload.config'
 
 export const dynamic = 'force-dynamic'
 
-export default async function JeeBlogsPage({ searchParams }: { searchParams: { page?: string } }) {
+export default async function JeeBlogsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>
+}) {
   const payload = await getPayload({ config })
-  const page = Number(searchParams.page) || 1
+  const resolvedSearchParams = await searchParams
+  const page = Number(resolvedSearchParams.page) || 1
   const limit = 12
 
   const blogsResponse = await payload.find({
@@ -54,9 +60,11 @@ export default async function JeeBlogsPage({ searchParams }: { searchParams: { p
                 >
                   {typeof blog.featuredImage === 'object' && blog.featuredImage?.url && (
                     <div className="h-48 overflow-hidden">
-                      <img
+                      <Image
                         src={blog.featuredImage.url}
                         alt={blog.title}
+                        width={400}
+                        height={200}
                         className="w-full h-full object-cover"
                       />
                     </div>
@@ -130,4 +138,3 @@ export default async function JeeBlogsPage({ searchParams }: { searchParams: { p
     </div>
   )
 }
-

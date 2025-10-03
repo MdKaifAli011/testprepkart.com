@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { getPayload } from 'payload'
 import config from '@/payload.config'
 import { notFound } from 'next/navigation'
@@ -195,7 +196,13 @@ export default async function NeetBlogDetailPage({ params }: { params: Promise<{
 
         {typeof blog.featuredImage === 'object' && blog.featuredImage?.url && (
           <div className="mb-12 rounded-xl overflow-hidden shadow-lg">
-            <img src={blog.featuredImage.url} alt={blog.title} className="w-full h-auto" />
+            <Image
+              src={blog.featuredImage.url}
+              alt={blog.title}
+              width={800}
+              height={400}
+              className="w-full h-auto"
+            />
           </div>
         )}
 

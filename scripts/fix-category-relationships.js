@@ -1,7 +1,8 @@
 const { MongoClient } = require('mongodb')
 
 // MongoDB connection
-const MONGODB_URI = process.env.DATABASE_URI || 'mongodb://127.0.0.1/Demo_testprepkart_backend'
+// const MONGODB_URI = process.env.DATABASE_URI || 'mongodb://127.0.0.1/Demo_testprepkart_backend'
+const MONGODB_URI ='mongodb+srv://testprepkartdev_db_user:testprepkartdev_db_pass@testprepkart.ouuudgs.mongodb.net/Demo_testprepkart_backend_new?retryWrites=true&w=majority&appName=TestprepKart'
 
 async function fixCategoryRelationships() {
   const client = new MongoClient(MONGODB_URI)

@@ -8,10 +8,11 @@ export const dynamic = 'force-dynamic'
 export default async function SchoolBlogsPage({
   searchParams,
 }: {
-  searchParams: { page?: string }
+  searchParams: Promise<{ page?: string }>
 }) {
   const payload = await getPayload({ config })
-  const page = Number(searchParams.page) || 1
+  const resolvedSearchParams = await searchParams
+  const page = Number(resolvedSearchParams.page) || 1
 
   const blogsResponse = await payload.find({
     collection: 'schoolblogs',
@@ -51,4 +52,3 @@ export default async function SchoolBlogsPage({
     </div>
   )
 }
-

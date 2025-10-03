@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@/payload.config'
+import type { Where } from 'payload'
 
 export async function GET(request: NextRequest) {
   try {
@@ -15,7 +16,7 @@ export async function GET(request: NextRequest) {
     const payload = await getPayload({ config: payloadConfig })
 
     // Build query conditions
-    const where: Record<string, any> = {}
+    const where: Where = {}
 
     if (category && category !== 'all') {
       where.category = { equals: category }

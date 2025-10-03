@@ -25,16 +25,16 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     return NextResponse.json(course)
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching course:', error)
 
     // Handle specific MongoDB errors
-    if (error.name === 'DocumentNotFoundError' || error.message?.includes('could not be found')) {
+    if ((error as Error).name === 'DocumentNotFoundError' || (error as Error).message?.includes('could not be found')) {
       return NextResponse.json({ error: 'Course not found' }, { status: 404 })
     }
 
     // Handle MongoDB connection errors
-    if (error.name === 'MongooseServerSelectionError' || error.message?.includes('MongoDB')) {
+    if ((error as Error).name === 'MongooseServerSelectionError' || (error as Error).message?.includes('MongoDB')) {
       return NextResponse.json({ error: 'Database connection failed' }, { status: 503 })
     }
 

@@ -216,13 +216,14 @@ async function getCourse(id: string): Promise<Course | null> {
 }
 
 interface PreviewPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export default async function PreviewPage({ params }: PreviewPageProps) {
-  const course = await getCourse(params.id)
+  const resolvedParams = await params
+  const course = await getCourse(resolvedParams.id)
 
   if (!course) {
     notFound()
@@ -242,7 +243,7 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
               <p className="text-gray-600 mt-1">Preview of course content and structure</p>
             </div>
             <div className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-              ID: {params.id}
+              ID: {resolvedParams.id}
             </div>
           </div>
         </div>
@@ -414,7 +415,8 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
 }
 
 export async function generateMetadata({ params }: PreviewPageProps) {
-  const course = await getCourse(params.id)
+  const resolvedParams = await params
+  const course = await getCourse(resolvedParams.id)
 
   if (!course) {
     return {

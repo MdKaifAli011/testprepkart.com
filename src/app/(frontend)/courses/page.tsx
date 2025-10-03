@@ -1,8 +1,10 @@
 import React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { getPayload } from 'payload'
 import config from '@/payload.config'
 import type { Metadata } from 'next'
+import type { Where } from 'payload'
 
 export const dynamic = 'force-dynamic'
 
@@ -40,16 +42,17 @@ function getImageUrl(imageUrl: string | null | undefined): string | null {
 export default async function CoursesPage({
   searchParams,
 }: {
-  searchParams: { page?: string; category?: string }
+  searchParams: Promise<{ page?: string; category?: string }>
 }) {
   const payload = await getPayload({ config })
-  const page = Number(searchParams.page) || 1
+  const resolvedSearchParams = await searchParams
+  const page = Number(resolvedSearchParams.page) || 1
   const limit = 12
 
   // Build where clause
-  const where: any = {}
-  if (searchParams.category) {
-    where.category = { equals: searchParams.category }
+  const where: Where = {}
+  if (resolvedSearchParams.category) {
+    where.category = { equals: resolvedSearchParams.category }
   }
 
   let coursesResponse
@@ -92,7 +95,7 @@ export default async function CoursesPage({
           <Link
             href="/courses"
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              !searchParams.category
+              !resolvedSearchParams.category
                 ? 'bg-blue-600 text-white'
                 : 'bg-white text-gray-700 hover:bg-gray-100'
             }`}
@@ -104,7 +107,7 @@ export default async function CoursesPage({
               key={category.id}
               href={`/courses?category=${category.id}`}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                searchParams.category === category.id
+                resolvedSearchParams.category === category.id
                   ? 'bg-blue-600 text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-100'
               }`}
@@ -130,9 +133,11 @@ export default async function CoursesPage({
                 >
                   <div className="relative h-48 bg-gradient-to-r from-blue-400 to-purple-500">
                     {getImageUrl(course.course_image) ? (
-                      <img
+                      <Image
                         src={getImageUrl(course.course_image)!}
                         alt={course.course_name}
+                        width={400}
+                        height={200}
                         className="w-full h-full object-cover"
                       />
                     ) : (
@@ -244,7 +249,7 @@ export default async function CoursesPage({
               <div className="flex justify-center gap-2">
                 {page > 1 && (
                   <Link
-                    href={`/courses?page=${page - 1}${searchParams.category ? `&category=${searchParams.category}` : ''}`}
+                    href={`/courses?page=${page - 1}${resolvedSearchParams.category ? `&category=${resolvedSearchParams.category}` : ''}`}
                     className="px-4 py-2 bg-white rounded-lg hover:bg-gray-100 transition-colors"
                   >
                     Previous
@@ -254,7 +259,7 @@ export default async function CoursesPage({
                   (pageNum) => (
                     <Link
                       key={pageNum}
-                      href={`/courses?page=${pageNum}${searchParams.category ? `&category=${searchParams.category}` : ''}`}
+                      href={`/courses?page=${pageNum}${resolvedSearchParams.category ? `&category=${resolvedSearchParams.category}` : ''}`}
                       className={`px-4 py-2 rounded-lg transition-colors ${
                         pageNum === page ? 'bg-blue-600 text-white' : 'bg-white hover:bg-gray-100'
                       }`}
@@ -265,7 +270,7 @@ export default async function CoursesPage({
                 )}
                 {page < coursesResponse.totalPages && (
                   <Link
-                    href={`/courses?page=${page + 1}${searchParams.category ? `&category=${searchParams.category}` : ''}`}
+                    href={`/courses?page=${page + 1}${resolvedSearchParams.category ? `&category=${resolvedSearchParams.category}` : ''}`}
                     className="px-4 py-2 bg-white rounded-lg hover:bg-gray-100 transition-colors"
                   >
                     Next
