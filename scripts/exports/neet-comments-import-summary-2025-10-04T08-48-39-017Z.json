@@ -1,0 +1,29 @@
+{
+  "importInfo": {
+    "timestamp": "2025-10-04T08:48:39.016Z",
+    "sourceFile": "neet-comments.json",
+    "targetCollection": "neet_comments",
+    "importType": "comments_with_blog_relationships"
+  },
+  "analysis": {
+    "totalCommentsInFile": 759,
+    "commentsWithValidBlogs": 0,
+    "commentsWithoutBlogs": 759,
+    "validComments": 638,
+    "spamComments": 121,
+    "uniquePostIds": 166,
+    "uniqueAuthors": 637
+  },
+  "importResults": {
+    "commentsInserted": 0,
+    "commentsSkipped": 0,
+    "commentsWithErrors": 759
+  },
+  "finalStats": {
+    "totalComments": 0,
+    "approvedComments": 0,
+    "spamComments": 0,
+    "commentsWithBlogs": 0,
+    "commentsWithoutBlogs": 0
+  }
+}

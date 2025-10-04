@@ -14,7 +14,8 @@ import {
   examCollections,
   downloadCollections,
   courseCollections,
-  blogCollections
+  blogCollections,
+  commentsCollections,
 } from './collections'
 
 const filename = fileURLToPath(import.meta.url)
@@ -54,6 +55,9 @@ export default buildConfig({
     
     // Blog Collections
     ...blogCollections,
+    
+    // comments Collections
+    ...commentsCollections,
   ],
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [
@@ -71,7 +75,7 @@ export default buildConfig({
     },
   }),
   onInit: async (_payload) => {
-    const totalCollections = coreCollections.length + examCollections.length + downloadCollections.length + courseCollections.length + blogCollections.length
+    const totalCollections = coreCollections.length + examCollections.length + downloadCollections.length + courseCollections.length + blogCollections.length + commentsCollections.length
     
     console.log('\n✅ Payload CMS Initialized Successfully!')
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
@@ -82,6 +86,7 @@ export default buildConfig({
     console.log(`   - Downloads: ${downloadCollections.length}`)
     console.log(`   - Courses: ${courseCollections.length}`)
     console.log(`   - Blogs: ${blogCollections.length}`)
+    console.log(`   - comments: ${commentsCollections.length}`)
     console.log(`🔐 Admin User Collection: ${Users.slug}`)
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
   },

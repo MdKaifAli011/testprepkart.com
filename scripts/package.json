@@ -12,7 +12,14 @@
     "import:clear-embedded": "node mongodb-import.js --clear --embedded",
     "import:no-indexes": "node mongodb-import.js --no-indexes",
     "validate": "node validate-data.js",
-    "test": "node test-import.js"
+    "test": "node test-import.js",
+    "fetch:jee-blogs": "node fetch-jee-blogs-details.js",
+    "import:jee-comments": "node import-jee-comments.js",
+    "import:sat-comments": "node import-sat-comments.js",
+    "import:school-comments": "node import-school-comments.js",
+    "import:neet-comments": "node import-neet-comments.js",
+    "import:ib-comments": "node import-ib-comments.js",
+    "import:ap-comments": "node import-ap-comments.js"
   },
   "dependencies": {
     "mongodb": "^6.3.0"

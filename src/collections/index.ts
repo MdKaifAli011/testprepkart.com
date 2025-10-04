@@ -24,6 +24,14 @@ export { SatBlogs } from './SatBlogs'
 export { IdBlogs } from './IdBlogs'
 export { ApBlogs } from './ApBlogs'
 
+// Content Collections
+export { JeeComments } from './JeeComments'
+export { SatComments } from './SatComments'
+export { SchoolComments } from './SchoolComments'
+export { NeetComments } from './NeetComments'
+export { IbComments } from './IbComments'
+export { ApComments } from './ApComments'
+
 // Import collections for grouping (re-import for internal use)
 import { Users } from './Users'
 import { Media } from './Media'
@@ -41,6 +49,12 @@ import { SchoolBlogs } from './SchoolBlogs'
 import { SatBlogs } from './SatBlogs'
 import { IdBlogs } from './IdBlogs'
 import { ApBlogs } from './ApBlogs'
+import { JeeComments } from './JeeComments'
+import { SatComments } from './SatComments'
+import { SchoolComments } from './SchoolComments'
+import { NeetComments } from './NeetComments'
+import { IbComments } from './IbComments'
+import { ApComments } from './ApComments'
 
 // Collection Groups for easy importing
 export const coreCollections = [Users, Media]
@@ -53,6 +67,8 @@ export const courseCollections = [Courses]
 
 export const blogCollections = [JeeBlogs, NeetBlogs, SchoolBlogs, SatBlogs, IdBlogs, ApBlogs]
 
+export const commentsCollections = [JeeComments, SatComments, SchoolComments, NeetComments, IbComments, ApComments]
+
 // All collections combined
 export const allCollections = [
   ...coreCollections,
@@ -60,4 +76,5 @@ export const allCollections = [
   ...downloadCollections,
   ...courseCollections,
   ...blogCollections,
+  ...commentsCollections,
 ]

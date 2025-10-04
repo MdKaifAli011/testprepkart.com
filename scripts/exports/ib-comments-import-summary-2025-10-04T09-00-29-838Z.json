@@ -1,0 +1,29 @@
+{
+  "importInfo": {
+    "timestamp": "2025-10-04T09:00:29.837Z",
+    "sourceFile": "ib-comments.json",
+    "targetCollection": "ib_comments",
+    "importType": "comments_with_blog_relationships"
+  },
+  "analysis": {
+    "totalCommentsInFile": 1169,
+    "commentsWithValidBlogs": 1169,
+    "commentsWithoutBlogs": 0,
+    "validComments": 1045,
+    "spamComments": 124,
+    "uniquePostIds": 127,
+    "uniqueAuthors": 829
+  },
+  "importResults": {
+    "commentsInserted": 1169,
+    "commentsSkipped": 0,
+    "commentsWithErrors": 0
+  },
+  "finalStats": {
+    "totalComments": 1169,
+    "approvedComments": 1045,
+    "spamComments": 124,
+    "commentsWithBlogs": 1169,
+    "commentsWithoutBlogs": 0
+  }
+}

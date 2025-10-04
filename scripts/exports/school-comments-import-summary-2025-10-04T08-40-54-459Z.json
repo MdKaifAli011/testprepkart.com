@@ -1,0 +1,29 @@
+{
+  "importInfo": {
+    "timestamp": "2025-10-04T08:40:54.458Z",
+    "sourceFile": "school exam-comment.json",
+    "targetCollection": "school_comments",
+    "importType": "comments_with_blog_relationships"
+  },
+  "analysis": {
+    "totalCommentsInFile": 231,
+    "commentsWithValidBlogs": 231,
+    "commentsWithoutBlogs": 0,
+    "validComments": 198,
+    "spamComments": 33,
+    "uniquePostIds": 38,
+    "uniqueAuthors": 208
+  },
+  "importResults": {
+    "commentsInserted": 0,
+    "commentsSkipped": 231,
+    "commentsWithErrors": 0
+  },
+  "finalStats": {
+    "totalComments": 231,
+    "approvedComments": 198,
+    "spamComments": 33,
+    "commentsWithBlogs": 231,
+    "commentsWithoutBlogs": 0
+  }
+}

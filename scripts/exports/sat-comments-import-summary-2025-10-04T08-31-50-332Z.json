@@ -1,0 +1,29 @@
+{
+  "importInfo": {
+    "timestamp": "2025-10-04T08:31:50.332Z",
+    "sourceFile": "sat_comments.json",
+    "targetCollection": "sat_comments",
+    "importType": "comments_with_blog_relationships"
+  },
+  "analysis": {
+    "totalCommentsInFile": 1120,
+    "commentsWithValidBlogs": 893,
+    "commentsWithoutBlogs": 227,
+    "validComments": 949,
+    "spamComments": 171,
+    "uniquePostIds": 207,
+    "uniqueAuthors": 885
+  },
+  "importResults": {
+    "commentsInserted": 0,
+    "commentsSkipped": 893,
+    "commentsWithErrors": 227
+  },
+  "finalStats": {
+    "totalComments": 893,
+    "approvedComments": 744,
+    "spamComments": 149,
+    "commentsWithBlogs": 893,
+    "commentsWithoutBlogs": 0
+  }
+}

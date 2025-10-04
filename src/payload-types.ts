@@ -83,6 +83,12 @@ export interface Config {
     satblogs: Satblog;
     idblogs: Idblog;
     apblogs: Apblog;
+    jee_comments: JeeComment;
+    sat_comments: SatComment;
+    school_comments: SchoolComment;
+    neet_comments: NeetComment;
+    ib_comments: IbComment;
+    ap_comments: ApComment;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -105,6 +111,12 @@ export interface Config {
     satblogs: SatblogsSelect<false> | SatblogsSelect<true>;
     idblogs: IdblogsSelect<false> | IdblogsSelect<true>;
     apblogs: ApblogsSelect<false> | ApblogsSelect<true>;
+    jee_comments: JeeCommentsSelect<false> | JeeCommentsSelect<true>;
+    sat_comments: SatCommentsSelect<false> | SatCommentsSelect<true>;
+    school_comments: SchoolCommentsSelect<false> | SchoolCommentsSelect<true>;
+    neet_comments: NeetCommentsSelect<false> | NeetCommentsSelect<true>;
+    ib_comments: IbCommentsSelect<false> | IbCommentsSelect<true>;
+    ap_comments: ApCommentsSelect<false> | ApCommentsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -1126,6 +1138,432 @@ export interface Apblog {
   createdAt: string;
 }
 /**
+ * Comments on blog posts
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "jee_comments".
+ */
+export interface JeeComment {
+  id: string;
+  /**
+   * Original comment ID from the imported data
+   */
+  originalId?: number | null;
+  /**
+   * Original post ID from SQL (will be mapped to blog originalId)
+   */
+  comment_post_ID: number;
+  /**
+   * Related JEE blog (mapped from comment_post_ID)
+   */
+  blog?: (string | null) | Jeeblog;
+  /**
+   * Comment author name
+   */
+  comment_author: string;
+  /**
+   * Comment author email
+   */
+  comment_author_email?: string | null;
+  /**
+   * Comment content
+   */
+  comment_content: string;
+  /**
+   * Original comment date from SQL
+   */
+  comment_date: string;
+  /**
+   * Comment moderation status
+   */
+  status?: ('approved' | 'pending' | 'spam' | 'trash') | null;
+  /**
+   * Mark as spam (auto-detected)
+   */
+  isSpam?: boolean | null;
+  /**
+   * Is this a reply to another comment
+   */
+  isReply?: boolean | null;
+  /**
+   * Parent comment if this is a reply
+   */
+  parentComment?: (string | null) | JeeComment;
+  /**
+   * Number of likes
+   */
+  likes?: number | null;
+  /**
+   * Number of dislikes
+   */
+  dislikes?: number | null;
+  /**
+   * IP address of commenter (if available)
+   */
+  ipAddress?: string | null;
+  /**
+   * User agent string (if available)
+   */
+  userAgent?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Comments on SAT blog posts
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sat_comments".
+ */
+export interface SatComment {
+  id: string;
+  /**
+   * Original comment ID from the imported data
+   */
+  originalId?: number | null;
+  /**
+   * Original post ID from SQL (will be mapped to blog originalId)
+   */
+  comment_post_ID: number;
+  /**
+   * Related SAT blog (mapped from comment_post_ID)
+   */
+  blog?: (string | null) | Satblog;
+  /**
+   * Comment author name
+   */
+  comment_author: string;
+  /**
+   * Comment author email
+   */
+  comment_author_email?: string | null;
+  /**
+   * Comment content
+   */
+  comment_content: string;
+  /**
+   * Original comment date from SQL
+   */
+  comment_date: string;
+  /**
+   * Comment moderation status
+   */
+  status?: ('approved' | 'pending' | 'spam' | 'trash') | null;
+  /**
+   * Mark as spam (auto-detected)
+   */
+  isSpam?: boolean | null;
+  /**
+   * Is this a reply to another comment
+   */
+  isReply?: boolean | null;
+  /**
+   * Parent comment if this is a reply
+   */
+  parentComment?: (string | null) | SatComment;
+  /**
+   * Number of likes
+   */
+  likes?: number | null;
+  /**
+   * Number of dislikes
+   */
+  dislikes?: number | null;
+  /**
+   * IP address of commenter (if available)
+   */
+  ipAddress?: string | null;
+  /**
+   * User agent string (if available)
+   */
+  userAgent?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Comments on school exam blog posts
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "school_comments".
+ */
+export interface SchoolComment {
+  id: string;
+  /**
+   * Original comment ID from the imported data
+   */
+  originalId?: number | null;
+  /**
+   * Original post ID from SQL (will be mapped to blog originalId)
+   */
+  comment_post_ID: number;
+  /**
+   * Related school blog (mapped from comment_post_ID)
+   */
+  blog?: (string | null) | Schoolblog;
+  /**
+   * Comment author name
+   */
+  comment_author: string;
+  /**
+   * Comment author email
+   */
+  comment_author_email?: string | null;
+  /**
+   * Comment content
+   */
+  comment_content: string;
+  /**
+   * Original comment date from SQL
+   */
+  comment_date: string;
+  /**
+   * Comment moderation status
+   */
+  status?: ('approved' | 'pending' | 'spam' | 'trash') | null;
+  /**
+   * Mark as spam (auto-detected)
+   */
+  isSpam?: boolean | null;
+  /**
+   * Is this a reply to another comment
+   */
+  isReply?: boolean | null;
+  /**
+   * Parent comment if this is a reply
+   */
+  parentComment?: (string | null) | SchoolComment;
+  /**
+   * Number of likes
+   */
+  likes?: number | null;
+  /**
+   * Number of dislikes
+   */
+  dislikes?: number | null;
+  /**
+   * IP address of commenter (if available)
+   */
+  ipAddress?: string | null;
+  /**
+   * User agent string (if available)
+   */
+  userAgent?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Comments on NEET blog posts
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "neet_comments".
+ */
+export interface NeetComment {
+  id: string;
+  /**
+   * Original comment ID from the imported data
+   */
+  originalId?: number | null;
+  /**
+   * Original post ID from SQL (will be mapped to blog originalId)
+   */
+  comment_post_ID: number;
+  /**
+   * Related NEET blog (mapped from comment_post_ID)
+   */
+  blog?: (string | null) | Neetblog;
+  /**
+   * Comment author name
+   */
+  comment_author: string;
+  /**
+   * Comment author email
+   */
+  comment_author_email?: string | null;
+  /**
+   * Comment content
+   */
+  comment_content: string;
+  /**
+   * Original comment date from SQL
+   */
+  comment_date: string;
+  /**
+   * Comment moderation status
+   */
+  status?: ('approved' | 'pending' | 'spam' | 'trash') | null;
+  /**
+   * Mark as spam (auto-detected)
+   */
+  isSpam?: boolean | null;
+  /**
+   * Is this a reply to another comment
+   */
+  isReply?: boolean | null;
+  /**
+   * Parent comment if this is a reply
+   */
+  parentComment?: (string | null) | NeetComment;
+  /**
+   * Number of likes
+   */
+  likes?: number | null;
+  /**
+   * Number of dislikes
+   */
+  dislikes?: number | null;
+  /**
+   * IP address of commenter (if available)
+   */
+  ipAddress?: string | null;
+  /**
+   * User agent string (if available)
+   */
+  userAgent?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Comments on IB blog posts
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ib_comments".
+ */
+export interface IbComment {
+  id: string;
+  /**
+   * Original comment ID from the imported data
+   */
+  originalId?: number | null;
+  /**
+   * Original post ID from SQL (will be mapped to blog originalId)
+   */
+  comment_post_ID: number;
+  /**
+   * Related IB blog (mapped from comment_post_ID)
+   */
+  blog?: (string | null) | Idblog;
+  /**
+   * Comment author name
+   */
+  comment_author: string;
+  /**
+   * Comment author email
+   */
+  comment_author_email?: string | null;
+  /**
+   * Comment content
+   */
+  comment_content: string;
+  /**
+   * Original comment date from SQL
+   */
+  comment_date: string;
+  /**
+   * Comment moderation status
+   */
+  status?: ('approved' | 'pending' | 'spam' | 'trash') | null;
+  /**
+   * Mark as spam (auto-detected)
+   */
+  isSpam?: boolean | null;
+  /**
+   * Is this a reply to another comment
+   */
+  isReply?: boolean | null;
+  /**
+   * Parent comment if this is a reply
+   */
+  parentComment?: (string | null) | IbComment;
+  /**
+   * Number of likes
+   */
+  likes?: number | null;
+  /**
+   * Number of dislikes
+   */
+  dislikes?: number | null;
+  /**
+   * IP address of commenter (if available)
+   */
+  ipAddress?: string | null;
+  /**
+   * User agent string (if available)
+   */
+  userAgent?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Comments on AP blog posts
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ap_comments".
+ */
+export interface ApComment {
+  id: string;
+  /**
+   * Original comment ID from the imported data
+   */
+  originalId?: number | null;
+  /**
+   * Original post ID from SQL (will be mapped to blog originalId)
+   */
+  comment_post_ID: number;
+  /**
+   * Related AP blog (mapped from comment_post_ID)
+   */
+  blog?: (string | null) | Apblog;
+  /**
+   * Comment author name
+   */
+  comment_author: string;
+  /**
+   * Comment author email
+   */
+  comment_author_email?: string | null;
+  /**
+   * Comment content
+   */
+  comment_content: string;
+  /**
+   * Original comment date from SQL
+   */
+  comment_date: string;
+  /**
+   * Comment moderation status
+   */
+  status?: ('approved' | 'pending' | 'spam' | 'trash') | null;
+  /**
+   * Mark as spam (auto-detected)
+   */
+  isSpam?: boolean | null;
+  /**
+   * Is this a reply to another comment
+   */
+  isReply?: boolean | null;
+  /**
+   * Parent comment if this is a reply
+   */
+  parentComment?: (string | null) | ApComment;
+  /**
+   * Number of likes
+   */
+  likes?: number | null;
+  /**
+   * Number of dislikes
+   */
+  dislikes?: number | null;
+  /**
+   * IP address of commenter (if available)
+   */
+  ipAddress?: string | null;
+  /**
+   * User agent string (if available)
+   */
+  userAgent?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
@@ -1195,6 +1633,30 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'apblogs';
         value: string | Apblog;
+      } | null)
+    | ({
+        relationTo: 'jee_comments';
+        value: string | JeeComment;
+      } | null)
+    | ({
+        relationTo: 'sat_comments';
+        value: string | SatComment;
+      } | null)
+    | ({
+        relationTo: 'school_comments';
+        value: string | SchoolComment;
+      } | null)
+    | ({
+        relationTo: 'neet_comments';
+        value: string | NeetComment;
+      } | null)
+    | ({
+        relationTo: 'ib_comments';
+        value: string | IbComment;
+      } | null)
+    | ({
+        relationTo: 'ap_comments';
+        value: string | ApComment;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -1677,6 +2139,144 @@ export interface ApblogsSelect<T extends boolean = true> {
   metaDescription?: T;
   keywords?: T;
   publishedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "jee_comments_select".
+ */
+export interface JeeCommentsSelect<T extends boolean = true> {
+  originalId?: T;
+  comment_post_ID?: T;
+  blog?: T;
+  comment_author?: T;
+  comment_author_email?: T;
+  comment_content?: T;
+  comment_date?: T;
+  status?: T;
+  isSpam?: T;
+  isReply?: T;
+  parentComment?: T;
+  likes?: T;
+  dislikes?: T;
+  ipAddress?: T;
+  userAgent?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sat_comments_select".
+ */
+export interface SatCommentsSelect<T extends boolean = true> {
+  originalId?: T;
+  comment_post_ID?: T;
+  blog?: T;
+  comment_author?: T;
+  comment_author_email?: T;
+  comment_content?: T;
+  comment_date?: T;
+  status?: T;
+  isSpam?: T;
+  isReply?: T;
+  parentComment?: T;
+  likes?: T;
+  dislikes?: T;
+  ipAddress?: T;
+  userAgent?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "school_comments_select".
+ */
+export interface SchoolCommentsSelect<T extends boolean = true> {
+  originalId?: T;
+  comment_post_ID?: T;
+  blog?: T;
+  comment_author?: T;
+  comment_author_email?: T;
+  comment_content?: T;
+  comment_date?: T;
+  status?: T;
+  isSpam?: T;
+  isReply?: T;
+  parentComment?: T;
+  likes?: T;
+  dislikes?: T;
+  ipAddress?: T;
+  userAgent?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "neet_comments_select".
+ */
+export interface NeetCommentsSelect<T extends boolean = true> {
+  originalId?: T;
+  comment_post_ID?: T;
+  blog?: T;
+  comment_author?: T;
+  comment_author_email?: T;
+  comment_content?: T;
+  comment_date?: T;
+  status?: T;
+  isSpam?: T;
+  isReply?: T;
+  parentComment?: T;
+  likes?: T;
+  dislikes?: T;
+  ipAddress?: T;
+  userAgent?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ib_comments_select".
+ */
+export interface IbCommentsSelect<T extends boolean = true> {
+  originalId?: T;
+  comment_post_ID?: T;
+  blog?: T;
+  comment_author?: T;
+  comment_author_email?: T;
+  comment_content?: T;
+  comment_date?: T;
+  status?: T;
+  isSpam?: T;
+  isReply?: T;
+  parentComment?: T;
+  likes?: T;
+  dislikes?: T;
+  ipAddress?: T;
+  userAgent?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ap_comments_select".
+ */
+export interface ApCommentsSelect<T extends boolean = true> {
+  originalId?: T;
+  comment_post_ID?: T;
+  blog?: T;
+  comment_author?: T;
+  comment_author_email?: T;
+  comment_content?: T;
+  comment_date?: T;
+  status?: T;
+  isSpam?: T;
+  isReply?: T;
+  parentComment?: T;
+  likes?: T;
+  dislikes?: T;
+  ipAddress?: T;
+  userAgent?: T;
   updatedAt?: T;
   createdAt?: T;
 }

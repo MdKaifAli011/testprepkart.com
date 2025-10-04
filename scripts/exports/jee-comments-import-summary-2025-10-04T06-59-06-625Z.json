@@ -1,0 +1,29 @@
+{
+  "importInfo": {
+    "timestamp": "2025-10-04T06:59:06.624Z",
+    "sourceFile": "jee-comment.json",
+    "targetCollection": "comments",
+    "importType": "comments_with_blog_relationships"
+  },
+  "analysis": {
+    "totalCommentsInFile": 1938,
+    "commentsWithValidBlogs": 1938,
+    "commentsWithoutBlogs": 0,
+    "validComments": 1608,
+    "spamComments": 330,
+    "uniquePostIds": 391,
+    "uniqueAuthors": 1525
+  },
+  "importResults": {
+    "commentsInserted": 1938,
+    "commentsSkipped": 0,
+    "commentsWithErrors": 0
+  },
+  "finalStats": {
+    "totalComments": 1938,
+    "approvedComments": 1608,
+    "spamComments": 330,
+    "commentsWithBlogs": 1938,
+    "commentsWithoutBlogs": 0
+  }
+}

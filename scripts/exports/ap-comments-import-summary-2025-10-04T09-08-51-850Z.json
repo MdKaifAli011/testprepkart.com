@@ -1,0 +1,29 @@
+{
+  "importInfo": {
+    "timestamp": "2025-10-04T09:08:51.849Z",
+    "sourceFile": "ap-comments.json",
+    "targetCollection": "ap_comments",
+    "importType": "comments_with_blog_relationships"
+  },
+  "analysis": {
+    "totalCommentsInFile": 26,
+    "commentsWithValidBlogs": 26,
+    "commentsWithoutBlogs": 0,
+    "validComments": 0,
+    "spamComments": 26,
+    "uniquePostIds": 3,
+    "uniqueAuthors": 11
+  },
+  "importResults": {
+    "commentsInserted": 26,
+    "commentsSkipped": 0,
+    "commentsWithErrors": 0
+  },
+  "finalStats": {
+    "totalComments": 26,
+    "approvedComments": 0,
+    "spamComments": 26,
+    "commentsWithBlogs": 26,
+    "commentsWithoutBlogs": 0
+  }
+}
