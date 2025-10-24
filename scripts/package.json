@@ -19,9 +19,12 @@
     "import:school-comments": "node import-school-comments.js",
     "import:neet-comments": "node import-neet-comments.js",
     "import:ib-comments": "node import-ib-comments.js",
-    "import:ap-comments": "node import-ap-comments.js"
+    "import:ap-comments": "node import-ap-comments.js",
+    "convert:course-html": "node convert-course-html-to-richtext.js",
+    "convert:course-blocks": "node convert-course-html-to-blocks.js"
   },
   "dependencies": {
+    "jsdom": "^27.0.0",
     "mongodb": "^6.3.0"
   },
   "devDependencies": {
